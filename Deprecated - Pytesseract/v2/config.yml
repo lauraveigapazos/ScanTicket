@@ -1,0 +1,25 @@
+# tesseract language
+language: spa
+
+# where receipt text is stored
+receipts_path: "data/txt"
+
+# grocery store chains names and identifiers
+stores:
+  Mercadona:
+    - mercadona
+    - mercadona sa
+    - mercadona s.a.
+  Froiz:
+    - froiz
+    - supermercados froiz
+  Gadis:
+    - gadis
+  Eroski:
+    - eroski
+  
+cifs:
+  Mercadona: A46103834
+  Froiz: A36036739
+  Gadis: B15535552
+  Eroski: B48231351
