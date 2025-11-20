@@ -1,0 +1,43 @@
+{
+  "store": "Froiz",
+  "store_cif": "A36036739",
+  "date": "2025-10-31",
+  "time": "14:11:00",
+  "address": "Avda. De Oza, 16",
+  "phone": "16981173354",
+  "items": [
+    {
+      "name": "Pila Froiz Super Alkalina Lr03 Aaa 1",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 1.0,
+      "total_price": 1.0,
+      "category": "drogueria y perfumeria",
+      "tax": "21%"
+    },
+    {
+      "name": "Pastel Nata (Dama Crema) 3 U 165 G (",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 1.29,
+      "total_price": 1.29,
+      "category": "anaderia y bolleria",
+      "tax": "10%"
+    },
+    {
+      "name": "Pan De Broa Maíz 35% 450 G (Pc)",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 1.29,
+      "total_price": 1.29,
+      "category": "ahorro",
+      "tax": "4%"
+    }
+  ],
+  "subtotal": null,
+  "tax": null,
+  "total": 3.58,
+  "payment_method": "Tarjeta",
+  "transaction_id": null,
+  "raw_text": "froiz\ndistribuciones froiz, s.a.u.\ncif a36036739\navda. de oza, 16\n981173354\na doruña,\n31 10 2025\n14:11\n094863\nfactura simplificada: 02-113315\ndescripcion\ncant.\np.v.p.\nimporte\ndrogueria y perfumeria\npila froiz super alkalina lr03 aaa 1 21%\n03201\n1\n1,00\n1,00\n anaderia y bolleria\npastel nata (dama crema) 3 u 165 g ( 10%\n057792\n1\n1,29\n1,29\nahorro\npan de broa maíz 35% 450 g (pc)\n4%\n065458-\n1\n1,37 1,29\n1,29\n*total:\n3,58 eur.\nentrega:\n3,58 eur.\ntarjetas:\n3,58 eur.\na devolver:\n0,00 eur.\nbase\nc.iva\ntotal\n4,00%\n1,24\n0,05\n1,29\n10,00%\n1,17\n0,12\n1,29\n21,00%\n0,83\n0,17\n1,00\natendido por: ana maría\npara cualquier cambio o devolución\nes imprescindible la conservación\ny presentación de este tique.\nel importe se reintegrará en la misma\nforma de pago que se abonó la compra\nplazo 15 dias\n0051000 00 10610020 025985612\nimpreso en papel certificado fsc"
+}

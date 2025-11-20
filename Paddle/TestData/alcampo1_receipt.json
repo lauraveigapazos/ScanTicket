@@ -1,0 +1,51 @@
+{
+  "store": "Alcampo",
+  "store_cif": null,
+  "date": "2025-11-07",
+  "time": "19:31:00",
+  "address": null,
+  "phone": "0000000041010",
+  "items": [
+    {
+      "name": "Galletas R Avell",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 1.85,
+      "total_price": 1.85
+    },
+    {
+      "name": "Cerveza Reserva",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 11.99,
+      "total_price": 11.99
+    },
+    {
+      "name": "H.Weissbier",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 1.56,
+      "total_price": 1.56
+    },
+    {
+      "name": "H.Weissbier",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 1.56,
+      "total_price": 1.56
+    },
+    {
+      "name": "Aceituna Verde",
+      "quantity": 1,
+      "unit": "ud",
+      "unit_price": 2.74,
+      "total_price": 2.74
+    }
+  ],
+  "subtotal": null,
+  "tax": null,
+  "total": 19.7,
+  "payment_method": "Tarjeta",
+  "transaction_id": "a0000000041010",
+  "raw_text": "alcampomvigo-2\nfactora simplificada\ngalletas r avell\n1,85\ncerveza reserva\n11,99\nca\nh.weissbier\n1.56\nh.weissbier\n1,56\na\naceituna verde\np\n2,74\nb\n€*\ntot\n19,70\n6\ntarjeta\n19,70\n6\ncambio\n,00\nnum. total\nart.\nvendidos\n-\n5\nimp.\n%\nbase\ncuota\na iva\n21,00\n12,49\n2,62\nb iva\n10,00\n4,17\n,42\n=•s3=\n=\n=\n=\n----=\npara el cliente\nestablecimiento:\nalcampo\ns\nvigo\nii\nlocalidad:\n36214 vig0 ii\nfecha\n- hora:\n07/11/25\n- 19:31\nnumero tarjeta:\n***************85*8\nnumero operacion:\n00169\ntipo de transaccion:\nventa\ncodigo respuesta arc:\n00\nimporte / moneda:\n19,70 / eur\nnumero autorizacion:\n671413\naid:\na0000000041010\netiqueta apli:\nmastercard\ncontactless\nverificacion usuario:\nninguna\nn. referencia:\n00169_251107_193103\nentidad:\npuc-redsys\na tu compra le corresponden 3 sellos\nde la campaña liébana.\nhecha\nen españa\ncon 5 sellos y tu tarjeta club\nconsigue cada pieza con un 5o% de\ndescuento\n7/11/25 19:31 0012 10 0169 283\nalcamp0 s.a. cif.a28581882 tl986417000\n1-santiago de compostela sur sn 28029"
+}
