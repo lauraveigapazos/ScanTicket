@@ -1,5 +1,51 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-smoke text-slate-gray font-sans antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-heading;
+    }
 }
+
+@layer components {
+    .btn-primary {
+        @apply bg-myrtle text-white px-6 py-3 rounded-lg font-heading font-semibold
+        hover:bg-viridian transition-colors duration-200
+        focus:outline-none focus:ring-2 focus:ring-cambridge focus:ring-offset-2
+        disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-secondary {
+        @apply bg-white text-myrtle border border-timberwolf px-6 py-3 rounded-lg font-heading font-semibold
+        hover:bg-smoke transition-colors duration-200
+        focus:outline-none focus:ring-2 focus:ring-cambridge focus:ring-offset-2;
+    }
+
+    .input-field {
+        @apply w-full px-4 py-3 rounded-lg border border-timberwolf bg-white
+        text-slate-gray placeholder-cambridge/60
+        focus:outline-none focus:ring-2 focus:ring-cambridge focus:border-transparent
+        transition-all duration-200;
+    }
+
+    .input-label {
+        @apply block text-sm font-medium text-slate-gray mb-1.5;
+    }
+
+    .input-error {
+        @apply text-melon text-sm mt-1;
+    }
+
+    .card {
+        @apply bg-white rounded-xl shadow-sm border border-timberwolf/30 p-5;
+    }
+}
+
+
