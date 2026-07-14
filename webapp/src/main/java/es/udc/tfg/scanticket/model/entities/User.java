@@ -1,9 +1,6 @@
 package es.udc.tfg.scanticket.model.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
  * The Class User.
  */
 @Entity
+@Table(name = "Users")
 public class User {
 
 	/**
