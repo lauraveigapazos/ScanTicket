@@ -6,6 +6,7 @@ import java.util.Locale;
 import es.udc.tfg.scanticket.model.services.UserService;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectPasswordException;
+import es.udc.tfg.scanticket.model.services.exceptions.InvalidPasswordResetTokenException;
 import es.udc.tfg.scanticket.model.services.exceptions.PermissionException;
 import es.udc.tfg.scanticket.rest.common.ErrorsDto;
 import es.udc.tfg.scanticket.rest.common.JwtInfo;
@@ -29,7 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import es.udc.tfg.scanticket.model.common.exceptions.DuplicateInstanceException;
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Users;
+import es.udc.tfg.scanticket.model.entities.User;
 import es.udc.tfg.scanticket.rest.common.JwtGenerator;
 import es.udc.tfg.scanticket.rest.dtos.AuthenticatedUserDto;
 import es.udc.tfg.scanticket.rest.dtos.ChangePasswordParamsDto;
@@ -99,6 +100,13 @@ public class UserController {
 
 	}
 
+	@ExceptionHandler(InvalidPasswordResetTokenException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseBody
+	public ErrorsDto handleInvalidPasswordResetTokenException(InvalidPasswordResetTokenException exception, Locale locale) {
+		return new ErrorsDto("El enlace de recuperación es inválido o ha expirado.");
+	}
+
 	/**
 	 * Sign up.
 	 *
@@ -111,7 +119,7 @@ public class UserController {
 			@Validated({ UserDto.AllValidations.class }) @RequestBody UserDto userDto)
 			throws DuplicateInstanceException {
 
-		Users user = UserConversor.toUser(userDto);
+		User user = UserConversor.toUser(userDto);
 
 		userService.signUp(user);
 
@@ -132,7 +140,7 @@ public class UserController {
 	@PostMapping("/login")
 	public AuthenticatedUserDto login(@Validated @RequestBody LoginParamsDto params) throws IncorrectLoginException {
 
-		Users user = userService.login(params.getUserName(), params.getPassword());
+		User user = userService.login(params.getUserName(), params.getPassword());
 
 		return UserConversor.toAuthenticatedUserDto(generateServiceToken(user), user);
 
@@ -150,7 +158,7 @@ public class UserController {
 	public AuthenticatedUserDto loginFromServiceToken(@RequestAttribute Long userId,
 			@RequestAttribute String serviceToken) throws InstanceNotFoundException {
 
-		Users user = userService.loginFromId(userId);
+		User user = userService.loginFromId(userId);
 
 		return UserConversor.toAuthenticatedUserDto(serviceToken, user);
 
@@ -203,6 +211,20 @@ public class UserController {
 		userService.changePassword(id, params.getOldPassword(), params.getNewPassword());
 
 	}
+
+	@PostMapping("/forgotPassword")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void forgotPassword(@Validated @RequestBody ForgotPasswordParamsDto params)
+			throws InstanceNotFoundException {
+		userService.requestPasswordReset(params.getEmail());
+	}
+
+	@PostMapping("/resetPassword")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void resetPassword(@Validated @RequestBody ResetPasswordParamsDto params)
+			throws InvalidPasswordResetTokenException {
+		userService.resetPassword(params.getToken(), params.getNewPassword());
+	}
 	
 	/**
 	 * Generate service token.
@@ -210,7 +232,7 @@ public class UserController {
 	 * @param user the user
 	 * @return the string
 	 */
-	private String generateServiceToken(Users user) {
+	private String generateServiceToken(User user) {
 
 		JwtInfo jwtInfo = new JwtInfo(user.getId(), user.getUserName(), user.getRole().toString());
 

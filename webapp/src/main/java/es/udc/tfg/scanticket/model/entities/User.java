@@ -5,11 +5,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.time.LocalDateTime;
+
 /**
  * The Class User.
  */
 @Entity
-public class Users {
+public class User {
 
 	/**
 	 * The Enum RoleType.
@@ -40,10 +42,16 @@ public class Users {
 	/** The role. */
 	private RoleType role;
 
+	/** The password reset token. */
+	private String passwordResetToken;
+
+	/** The password reset token expiration time. */
+	private LocalDateTime passwordResetTokenExpiration;
+
 	/**
 	 * Instantiates a new user.
 	 */
-	public Users() {
+	public User() {
 	}
 
 	/**
@@ -55,7 +63,7 @@ public class Users {
 	 * @param lastName  the last name
 	 * @param email     the email
 	 */
-	public Users(String userName, String password, String firstName, String lastName, String email) {
+	public User(String userName, String password, String firstName, String lastName, String email) {
 
 		this.userName = userName;
 		this.password = password;
@@ -193,4 +201,19 @@ public class Users {
 		this.role = role;
 	}
 
+	public String getPasswordResetToken() {
+		return passwordResetToken;
+	}
+
+	public void setPasswordResetToken(String passwordResetToken) {
+		this.passwordResetToken = passwordResetToken;
+	}
+
+	public LocalDateTime getPasswordResetTokenExpiration() {
+		return passwordResetTokenExpiration;
+	}
+
+	public void setPasswordResetTokenExpiration(LocalDateTime passwordResetTokenExpiration) {
+		this.passwordResetTokenExpiration = passwordResetTokenExpiration;
+	}
 }

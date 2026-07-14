@@ -3,6 +3,7 @@ package es.udc.tfg.scanticket.rest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import es.udc.tfg.scanticket.model.services.EmailService;
 import es.udc.tfg.scanticket.rest.dtos.AuthenticatedUserDto;
 import es.udc.tfg.scanticket.rest.dtos.LoginParamsDto;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import es.udc.tfg.scanticket.model.entities.Users;
-import es.udc.tfg.scanticket.model.entities.Users.RoleType;
+import es.udc.tfg.scanticket.model.entities.User;
+import es.udc.tfg.scanticket.model.entities.User.RoleType;
 import es.udc.tfg.scanticket.model.entities.UserDao;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.rest.controllers.UserController;
@@ -54,6 +56,9 @@ public class UserControllerTest {
 	@Autowired
 	private UserController userController;
 
+	@MockBean
+	private EmailService emailService;
+
 	/**
 	 * Creates the authenticated user.
 	 *
@@ -65,7 +70,7 @@ public class UserControllerTest {
 	private AuthenticatedUserDto createAuthenticatedUser(String userName, RoleType roleType)
 			throws IncorrectLoginException {
 
-		Users user = new Users(userName, PASSWORD, "newUser", "user", "user@test.com");
+		User user = new User(userName, PASSWORD, "newUser", "user", "user@test.com");
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setRole(roleType);

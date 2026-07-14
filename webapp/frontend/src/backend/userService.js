@@ -79,3 +79,19 @@ export const changePassword = (
     onSuccess,
     onErrors
   );
+
+export const forgotPassword = (email, onSuccess, onErrors) =>
+    appFetch(
+        "/users/forgotPassword",
+        fetchConfig("POST", { email }),
+        onSuccess,
+        onErrors
+    );
+
+export const resetPassword = (token, newPassword, onSuccess, onErrors) =>
+    appFetch(
+        "/users/resetPassword",
+        fetchConfig("POST", { token, newPassword }),
+        onSuccess,
+        onErrors
+    );

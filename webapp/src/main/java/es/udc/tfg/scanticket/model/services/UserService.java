@@ -2,9 +2,10 @@ package es.udc.tfg.scanticket.model.services;
 
 import es.udc.tfg.scanticket.model.common.exceptions.DuplicateInstanceException;
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Users;
+import es.udc.tfg.scanticket.model.entities.User;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectPasswordException;
+import es.udc.tfg.scanticket.model.services.exceptions.InvalidPasswordResetTokenException;
 
 /**
  * The Interface UserService.
@@ -17,7 +18,7 @@ public interface UserService {
 	 * @param user the user
 	 * @throws DuplicateInstanceException the duplicate instance exception
 	 */
-	void signUp(Users user) throws DuplicateInstanceException;
+	void signUp(User user) throws DuplicateInstanceException;
 	
 	/**
 	 * Login.
@@ -27,7 +28,7 @@ public interface UserService {
 	 * @return the user
 	 * @throws IncorrectLoginException the incorrect login exception
 	 */
-	Users login(String userName, String password) throws IncorrectLoginException;
+	User login(String userName, String password) throws IncorrectLoginException;
 	
 	/**
 	 * Login from id.
@@ -36,7 +37,7 @@ public interface UserService {
 	 * @return the user
 	 * @throws InstanceNotFoundException the instance not found exception
 	 */
-	Users loginFromId(Long id) throws InstanceNotFoundException;
+	User loginFromId(Long id) throws InstanceNotFoundException;
 	
 	/**
 	 * Update profile.
@@ -48,7 +49,7 @@ public interface UserService {
 	 * @return the user
 	 * @throws InstanceNotFoundException the instance not found exception
 	 */
-	Users updateProfile(Long id, String firstName, String lastName, String email) throws InstanceNotFoundException;
+	User updateProfile(Long id, String firstName, String lastName, String email) throws InstanceNotFoundException;
 	
 	/**
 	 * Change password.
@@ -62,4 +63,8 @@ public interface UserService {
 	void changePassword(Long id, String oldPassword, String newPassword)
 		throws InstanceNotFoundException, IncorrectPasswordException;
 
+
+	void requestPasswordReset(String email) throws InstanceNotFoundException;
+
+	void resetPassword(String token, String newPassword) throws InvalidPasswordResetTokenException;
 }

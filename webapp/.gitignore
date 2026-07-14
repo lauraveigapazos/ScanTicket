@@ -17,3 +17,5 @@ Thumbs.db
 
 # Env
 .env.local
+.env
+*.env

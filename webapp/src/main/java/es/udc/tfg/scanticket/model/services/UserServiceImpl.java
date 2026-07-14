@@ -1,9 +1,12 @@
 package es.udc.tfg.scanticket.model.services;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectPasswordException;
+import es.udc.tfg.scanticket.model.services.exceptions.InvalidPasswordResetTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.udc.tfg.scanticket.model.common.exceptions.DuplicateInstanceException;
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Users;
+import es.udc.tfg.scanticket.model.entities.User;
 import es.udc.tfg.scanticket.model.entities.UserDao;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class UserServiceImpl.
@@ -33,6 +39,11 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private EmailService emailService;
+
+	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
 	/**
 	 * Sign up.
 	 *
@@ -40,14 +51,14 @@ public class UserServiceImpl implements UserService {
 	 * @throws DuplicateInstanceException the duplicate instance exception
 	 */
 	@Override
-	public void signUp(Users user) throws DuplicateInstanceException {
+	public void signUp(User user) throws DuplicateInstanceException {
 
 		if (userDao.existsByUserName(user.getUserName())) {
 			throw new DuplicateInstanceException("project.entities.user", user.getUserName());
 		}
 
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setRole(Users.RoleType.USER);
+		user.setRole(User.RoleType.USER);
 
 		userDao.save(user);
 
@@ -63,9 +74,9 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Users login(String userName, String password) throws IncorrectLoginException {
+	public User login(String userName, String password) throws IncorrectLoginException {
 
-		Optional<Users> user = userDao.findByUserName(userName);
+		Optional<User> user = userDao.findByUserName(userName);
 
 		if (!user.isPresent()) {
 			throw new IncorrectLoginException(userName, password);
@@ -88,7 +99,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public Users loginFromId(Long id) throws InstanceNotFoundException {
+	public User loginFromId(Long id) throws InstanceNotFoundException {
 		return permissionChecker.checkUser(id);
 	}
 
@@ -103,10 +114,10 @@ public class UserServiceImpl implements UserService {
 	 * @throws InstanceNotFoundException the instance not found exception
 	 */
 	@Override
-	public Users updateProfile(Long id, String firstName, String lastName, String email)
+	public User updateProfile(Long id, String firstName, String lastName, String email)
 			throws InstanceNotFoundException {
 
-		Users user = permissionChecker.checkUser(id);
+		User user = permissionChecker.checkUser(id);
 
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
@@ -129,7 +140,7 @@ public class UserServiceImpl implements UserService {
 	public void changePassword(Long id, String oldPassword, String newPassword)
 			throws InstanceNotFoundException, IncorrectPasswordException {
 
-		Users user = permissionChecker.checkUser(id);
+		User user = permissionChecker.checkUser(id);
 
 		if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
 			throw new IncorrectPasswordException();
@@ -137,6 +148,55 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(newPassword));
 		}
 
+	}
+
+	@Override
+	public void requestPasswordReset(String email) throws InstanceNotFoundException {
+
+		logger.info("=== PASSWORD RESET REQUEST ===");
+		logger.info("Searching for email: '{}'", email);
+		Optional<User> user = userDao.findByEmail(email);
+		logger.info("User found: {}", user.isPresent());
+		if (user.isEmpty()) {
+			throw new InstanceNotFoundException("project.entities.user", email);
+		}
+		logger.info("User found: {}", user.get().getUserName());
+		String resetToken = generatePasswordResetToken();
+		User u = user.get();
+		u.setPasswordResetToken(resetToken);
+		u.setPasswordResetTokenExpiration(LocalDateTime.now().plusHours(1));
+
+		userDao.save(u);
+
+		String resetLink = "http://localhost:3000/#/reset-password?token=" + resetToken;
+		emailService.sendPasswordResetEmail(email, resetLink);
+	}
+
+	@Override
+	public void resetPassword(String token, String newPassword) throws InvalidPasswordResetTokenException {
+
+		Optional<User> user = userDao.findByPasswordResetToken(token);
+
+		if (user.isEmpty()) {
+			throw new InvalidPasswordResetTokenException(token);
+		}
+
+		User u = user.get();
+
+		if (u.getPasswordResetTokenExpiration() == null ||
+				LocalDateTime.now().isAfter(u.getPasswordResetTokenExpiration())) {
+			throw new InvalidPasswordResetTokenException(token);
+		}
+
+		u.setPassword(passwordEncoder.encode(newPassword));
+		u.setPasswordResetToken(null);
+		u.setPasswordResetTokenExpiration(null);
+
+		userDao.save(u);
+	}
+
+	private String generatePasswordResetToken() {
+		return UUID.randomUUID().toString();
 	}
 
 }

@@ -1,7 +1,7 @@
 package es.udc.tfg.scanticket.model.services;
 
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Users;
+import es.udc.tfg.scanticket.model.entities.User;
 
 /**
  * The Interface PermissionChecker.
@@ -23,6 +23,6 @@ public interface PermissionChecker {
 	 * @return the user
 	 * @throws InstanceNotFoundException the instance not found exception
 	 */
-	public Users checkUser(Long userId) throws InstanceNotFoundException;
+	public User checkUser(Long userId) throws InstanceNotFoundException;
 	
 }

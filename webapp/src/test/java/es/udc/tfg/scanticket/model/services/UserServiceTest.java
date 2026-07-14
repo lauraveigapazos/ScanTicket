@@ -8,12 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import es.udc.tfg.scanticket.model.common.exceptions.DuplicateInstanceException;
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Users;
+import es.udc.tfg.scanticket.model.entities.User;
 
 /**
  * The Class UserServiceTest.
@@ -34,8 +35,11 @@ public class UserServiceTest {
 	 * @param userName the user name
 	 * @return the user
 	 */
-	private Users createUser(String userName) {
-		return new Users(userName, "password", "firstName", "lastName", userName + "@" + userName + ".com");
+
+	@MockBean
+	private EmailService emailService;
+	private User createUser(String userName) {
+		return new User(userName, "password", "firstName", "lastName", userName + "@" + userName + ".com");
 	}
 
 	/**
@@ -47,14 +51,14 @@ public class UserServiceTest {
 	@Test
 	public void testSignUpAndLoginFromId() throws DuplicateInstanceException, InstanceNotFoundException {
 
-		Users user = createUser("user");
+		User user = createUser("user");
 
 		userService.signUp(user);
 
-		Users loggedInUser = userService.loginFromId(user.getId());
+		User loggedInUser = userService.loginFromId(user.getId());
 
 		assertEquals(user, loggedInUser);
-		assertEquals(Users.RoleType.USER, user.getRole());
+		assertEquals(User.RoleType.USER, user.getRole());
 
 	}
 }

@@ -30,6 +30,20 @@ spring:
       use-sql-comments: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  mail:
+    host: smtp.mailgun.org
+    port: 587
+    username: ${MAILGUN_SMTP_USER}
+    password: ${MAILGUN_SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  mailgun:
+    from-email: ${MAILGUN_FROM_EMAIL}
 server:
   servlet:
     context-path: @project.contextPath@

@@ -7,6 +7,8 @@ import Login from "./users/Login";
 import SignUp from "./users/SignUp";
 import RequiresLogout from "../common/RequiresLogout";
 import RequiresLogin from "../common/RequiresLogin";
+import ForgotPassword from "./users/ForgotPassword";
+import ResetPassword from "./users/ResetPassword";
 
 const Body = () => {
   return (
@@ -18,7 +20,10 @@ const Body = () => {
           <Route element={<RequiresLogout />}>
               <Route path="users/login" element={<Login />} />
               <Route path="users/signUp" element={<SignUp />} />
+              <Route path="users/forgotPassword" element={<ForgotPassword />} />
           </Route>
+
+          <Route path="reset-password" element={<ResetPassword />} />
 
           {/* protected routes */}
           <Route element={<RequiresLogin />}>
