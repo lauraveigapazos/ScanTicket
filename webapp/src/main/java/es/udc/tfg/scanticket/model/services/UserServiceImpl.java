@@ -199,4 +199,14 @@ public class UserServiceImpl implements UserService {
 		return UUID.randomUUID().toString();
 	}
 
+	@Override
+	public User findUserById(Long id) throws InstanceNotFoundException {
+		Optional<User> user = userDao.findById(id);
+		if (user.isEmpty()) {
+			throw new InstanceNotFoundException("project.entities.user", id);
+		}
+
+		return user.get();
+	}
+
 }

@@ -1,0 +1,21 @@
+spring:
+  mail:
+    host: localhost
+    port: 1025
+    username: test@test.com
+    password: testpassword
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+mailgun:
+  from-email: noreply@test.local
+  smtp-user: test@test.com
+  smtp-password: testpassword
+
+app:
+  upload:
+    dir: target/test-uploads/receipts

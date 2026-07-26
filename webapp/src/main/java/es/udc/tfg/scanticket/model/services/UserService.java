@@ -67,4 +67,6 @@ public interface UserService {
 	void requestPasswordReset(String email) throws InstanceNotFoundException;
 
 	void resetPassword(String token, String newPassword) throws InvalidPasswordResetTokenException;
+
+	User findUserById(Long id) throws InstanceNotFoundException;
 }
