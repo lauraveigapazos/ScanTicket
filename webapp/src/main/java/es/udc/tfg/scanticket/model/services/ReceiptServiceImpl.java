@@ -55,6 +55,8 @@ public class ReceiptServiceImpl implements ReceiptService{
             Map<String, Object> ocrData = ocrService.extractReceiptData(imagePath);
             Receipt receipt = mapOcrDataToReceipt(user, ocrData);
 
+            receipt.setImagePath(imagePath);
+
             return receiptDao.save(receipt);
         }catch (Exception e){
             log.error("Error uploading receipt: {}", e.getMessage(), e);

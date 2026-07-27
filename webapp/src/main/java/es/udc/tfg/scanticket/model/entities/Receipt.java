@@ -20,7 +20,9 @@ public class Receipt {
     private User user;
     private String store;
     private String storeCif;
+    @Column(name = "receiptDate")
     private LocalDate date;
+    @Column(name = "receiptTime")
     private LocalTime time;
     private String address;
     private String phoneNumber;
@@ -29,6 +31,7 @@ public class Receipt {
     private BigDecimal total;
     private String paymentMethod;
     private String rawText;
+    private String imagePath;
 
     private List<ReceiptItem> items = new ArrayList<>();
     private LocalDateTime createdAt;
@@ -148,6 +151,14 @@ public class Receipt {
 
     public void setRawText(String rawText) {
         this.rawText = rawText;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
