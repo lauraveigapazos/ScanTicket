@@ -14,15 +14,11 @@ import java.util.List;
 @Table(name = "Receipts")
 public class Receipt {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private User user;
     private String store;
     private String storeCif;
-    @Column(name = "receiptDate")
     private LocalDate date;
-    @Column(name = "receiptTime")
     private LocalTime time;
     private String address;
     private String phoneNumber;
@@ -81,6 +77,7 @@ public class Receipt {
         this.storeCif = storeCif;
     }
 
+    @Column(name = "receiptDate")
     public LocalDate getDate() {
         return date;
     }
@@ -89,6 +86,7 @@ public class Receipt {
         this.date = date;
     }
 
+    @Column(name = "receiptTime")
     public LocalTime getTime() {
         return time;
     }
@@ -105,6 +103,7 @@ public class Receipt {
         this.address = address;
     }
 
+    @Column(name = "phone")
     public String getPhoneNumber() {
         return phoneNumber;
     }
