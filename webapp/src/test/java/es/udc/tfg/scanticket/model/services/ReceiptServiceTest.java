@@ -5,6 +5,8 @@ import es.udc.tfg.scanticket.model.entities.Receipt;
 import es.udc.tfg.scanticket.model.entities.ReceiptDao;
 import es.udc.tfg.scanticket.model.entities.ReceiptItem;
 import es.udc.tfg.scanticket.model.entities.User;
+import es.udc.tfg.scanticket.model.services.exceptions.InvalidImageException;
+import es.udc.tfg.scanticket.model.services.exceptions.ReceiptProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -123,8 +125,8 @@ public class ReceiptServiceTest {
         assertEquals("21%", item.getTax());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSaveUploadedFile_NullFilename() throws IOException{
+    @Test(expected = InvalidImageException.class)
+    public void testSaveUploadedFile_NullFilename() throws IOException, InvalidImageException {
 
         MultipartFile file = new MockMultipartFile(
                 "image",
@@ -136,8 +138,8 @@ public class ReceiptServiceTest {
         receiptService.saveUploadedFile(file, 1L);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSaveUploadedFile_InvalidExtension() throws IOException{
+    @Test(expected = InvalidImageException.class)
+    public void testSaveUploadedFile_InvalidExtension() throws IOException, InvalidImageException{
 
         MultipartFile file = new MockMultipartFile(
                 "image",
@@ -150,7 +152,7 @@ public class ReceiptServiceTest {
     }
 
     @Test
-    public void testUploadReceipt_Success() throws InstanceNotFoundException, IOException, InterruptedException{
+    public void testUploadReceipt_Success() throws InstanceNotFoundException, IOException, InterruptedException, InvalidImageException, ReceiptProcessingException {
 
         //mock dependencies
         when(userService.findUserById(1L)).thenReturn(testUser);

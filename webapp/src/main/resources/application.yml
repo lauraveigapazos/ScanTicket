@@ -3,6 +3,9 @@ logging:
     org:
       hibernate:
         SQL: debug
+app:
+  upload:
+    dir: ${user.home}/scanticket-uploads/receipts
 spring:
   datasource:
     url: @dataSource.url@

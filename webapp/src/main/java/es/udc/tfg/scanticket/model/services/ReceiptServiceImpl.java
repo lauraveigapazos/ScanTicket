@@ -5,6 +5,8 @@ import es.udc.tfg.scanticket.model.entities.Receipt;
 import es.udc.tfg.scanticket.model.entities.ReceiptDao;
 import es.udc.tfg.scanticket.model.entities.ReceiptItem;
 import es.udc.tfg.scanticket.model.entities.User;
+import es.udc.tfg.scanticket.model.services.exceptions.InvalidImageException;
+import es.udc.tfg.scanticket.model.services.exceptions.ReceiptProcessingException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +44,7 @@ public class ReceiptServiceImpl implements ReceiptService{
     }
 
     @Override
-    public Receipt uploadReceipt(Long userId, MultipartFile imageFile) throws InstanceNotFoundException {
+    public Receipt uploadReceipt(Long userId, MultipartFile imageFile) throws InstanceNotFoundException, InvalidImageException, ReceiptProcessingException {
 
         User user = userService.findUserById(userId);
 
@@ -53,11 +55,20 @@ public class ReceiptServiceImpl implements ReceiptService{
         try{
             String imagePath = saveUploadedFile(imageFile, userId);
             Map<String, Object> ocrData = ocrService.extractReceiptData(imagePath);
+
+            log.info("OCR Data extracted: {}", ocrData);
+            log.info("Date from OCR: {}", ocrData.get("date"));
+            log.info("Time from OCR: {}", ocrData.get("time"));
+
             Receipt receipt = mapOcrDataToReceipt(user, ocrData);
+
+            log.info("Receipt after mapping - Date: {}, Time: {}", receipt.getDate(), receipt.getTime());
 
             receipt.setImagePath(imagePath);
 
             return receiptDao.save(receipt);
+        }catch (InvalidImageException e) {
+            throw e; //handled by controller
         }catch (Exception e){
             log.error("Error uploading receipt: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to upload receipt: " + e.getMessage(), e);
@@ -65,12 +76,12 @@ public class ReceiptServiceImpl implements ReceiptService{
     }
 
     @Override
-    public String saveUploadedFile(MultipartFile file, Long userId) throws IOException {
+    public String saveUploadedFile(MultipartFile file, Long userId) throws IOException, InvalidImageException {
 
         String originalFilename = file.getOriginalFilename();
 
         if (originalFilename == null || originalFilename.isEmpty()) {
-            throw new IllegalArgumentException("File must have a valid filename");
+            throw new InvalidImageException("El archivo debe tener un nombre válido", "");
         }
 
         //extension extraction -> fallback to jpg
@@ -80,7 +91,7 @@ public class ReceiptServiceImpl implements ReceiptService{
         //extension validation
         String extension = fileExtension.toLowerCase();
         if (!extension.matches("\\.(jpg|jpeg|png|gif|bmp|webp)$")) {
-            throw new IllegalArgumentException("Invalid image file type: " + extension);
+            throw new InvalidImageException("Tipo de imagen no válido. Extensiones aceptadas: jpg, jpeg, png, gif, bmp, webp", originalFilename);
         }
 
         String filename = "receipt_" + userId + "_" + System.currentTimeMillis() + fileExtension;
