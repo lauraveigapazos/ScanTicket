@@ -6,14 +6,15 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'slate-gray': '#32433D',
-                'viridian': '#5E8F84',
-                'cambridge': '#7AA89D',
-                'myrtle': '#3D6F68',
-                'smoke': '#F2F4F3',
-                'timberwolf': '#CFD5D1',
-                'sunset': '#E8C48D',
-                'melon': '#EBAA9A',
+                'slate-gray': '#32433D',    //dark text
+                'viridian': '#5E8F84',      //primary background
+                'cambridge': '#7AA89D',     //primary light
+                'myrtle': '#3D6F68',        //primary dark/buttons
+                'white': '#FFFFFF',         //surface
+                'smoke': '#F2F4F3',         //light surface
+                'timberwolf': '#CFD5D1',    //borders
+                'sunset': '#E8C48D',        //warn
+                'melon': '#EBAA9A',         //error
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
