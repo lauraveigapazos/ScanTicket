@@ -9,6 +9,7 @@ import RequiresLogout from "../common/RequiresLogout";
 import RequiresLogin from "../common/RequiresLogin";
 import ForgotPassword from "./users/ForgotPassword";
 import ResetPassword from "./users/ResetPassword";
+import Sidebar from "./ui/Sidebar";
 
 const Body = () => {
   return (
@@ -27,7 +28,21 @@ const Body = () => {
 
           {/* protected routes */}
           <Route element={<RequiresLogin />}>
-              <Route path="home" element={<Home />} />
+              <Route
+                  element={
+                      <div className="flex min-h-screen bg-viridian">
+                          <Sidebar />
+                          <main className="flex-1 md:ml-64">
+                              <Routes>
+                                  <Route path="home" element={<Home />} />
+                                  {/* other protected routes */}
+                              </Routes>
+                          </main>
+                      </div>
+                  }
+              >
+                <Route path="home" element={<Home />} />
+              </Route>
           </Route>
 
           {/* catch all */}

@@ -2,27 +2,117 @@
 
 exports[`Home renders correctly 1`] = `
 <div
-  className="min-h-screen bg-smoke flex items-center justify-center px-4"
+  className="min-h-screen bg-smoke"
 >
   <div
-    className="text-center"
+    className="sticky top-0 z-10 bg-white border-b border-timberwolf/30 px-5 py-4"
   >
-    <h1
-      className="text-3xl font-bold text-myrtle mb-2"
+    <div
+      className="flex items-center justify-between"
     >
-      ¡Login exitoso!
-    </h1>
-    <p
-      className="text-cambridge font-sans mb-6"
+      <h1
+        className="text-2xl font-bold text-slate-gray"
+      >
+        Este mes
+      </h1>
+      <button
+        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-myrtle/20 hover:bg-myrtle/30 transition-colors"
+        onClick={[Function]}
+        title="Cerrar sesión"
+      >
+        <svg
+          className="h-6 w-6 text-myrtle"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+          />
+          <circle
+            cx="12"
+            cy="7"
+            r="4"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div
+    className="px-5 py-6 space-y-6 pb-20"
+  >
+    <div
+      className="card"
     >
-      Has iniciado sesión correctamente
-    </p>
-    <button
-      className="btn-secondary"
-      onClick={[Function]}
+      <h2
+        className="text-lg font-semibold text-slate-gray mb-4"
+      >
+        Añadir nuevo recibo
+      </h2>
+      <div
+        className="w-full"
+      >
+        <label
+          className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-cambridge rounded-lg cursor-pointer hover:bg-smoke transition-colors duration-200"
+        >
+          <div
+            className="flex flex-col items-center justify-center"
+          >
+            <svg
+              className="h-12 w-12 text-cambridge mb-3"
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
+              />
+              <circle
+                cx="12"
+                cy="13"
+                r="4"
+              />
+            </svg>
+            <p
+              className="text-sm font-semibold text-slate-gray mb-1"
+            >
+              Toca para cargar foto del recibo
+            </p>
+            <p
+              className="text-xs text-cambridge font-sans"
+            >
+              PNG, JPG, GIF hasta 5MB
+            </p>
+          </div>
+          <input
+            accept="image/*"
+            className="hidden"
+            disabled={false}
+            onChange={[Function]}
+            type="file"
+          />
+        </label>
+      </div>
+    </div>
+    <div
+      className="text-center py-12"
     >
-      Cerrar sesión
-    </button>
+      <div
+        className="inline-flex items-center justify-center"
+      >
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-4 border-cambridge border-t-myrtle"
+        />
+      </div>
+    </div>
   </div>
 </div>
 `;
