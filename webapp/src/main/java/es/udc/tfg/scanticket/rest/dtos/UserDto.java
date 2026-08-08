@@ -36,6 +36,8 @@ public class UserDto {
 	
 	/** The email. */
 	private String email;
+
+	private byte[] profilePicture;
 	
 	/** The role. */
 	private String role;
@@ -55,13 +57,14 @@ public class UserDto {
 	 * @param email the email
 	 * @param role the role
 	 */
-	public UserDto(Long id, String userName, String firstName, String lastName, String email, String role) {
+	public UserDto(Long id, String userName, String firstName, String lastName, String email, byte[] profilePicture, String role) {
 
 		this.id = id;
 		this.userName = userName != null ? userName.trim() : null;
 		this.firstName = firstName.trim();
 		this.lastName = lastName.trim();
 		this.email = email.trim();
+		this.profilePicture = profilePicture;
 		this.role = role;
 		
 	}
@@ -183,6 +186,14 @@ public class UserDto {
 	 */
 	public void setEmail(String email) {
 		this.email = email.trim();
+	}
+
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
 	}
 
 	/**

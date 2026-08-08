@@ -184,7 +184,7 @@ public class UserController {
 		}
 
 		return UserConversor.toUserDto(
-				userService.updateProfile(id, userDto.getFirstName(), userDto.getLastName(), userDto.getEmail()));
+				userService.updateProfile(id, userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), userDto.getProfilePicture()));
 
 	}
 

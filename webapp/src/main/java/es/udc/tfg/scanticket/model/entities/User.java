@@ -37,6 +37,8 @@ public class User {
 	/** The email. */
 	private String email;
 
+	private byte[] profilePicture;
+
 	/** The role. */
 	private RoleType role;
 
@@ -181,11 +183,22 @@ public class User {
 		this.email = email;
 	}
 
+	@Column(name = "profile_picture")
+	public byte[] getProfilePicture() {
+		return profilePicture;
+	}
+
+	public void setProfilePicture(byte[] profilePicture) {
+		this.profilePicture = profilePicture;
+	}
+
 	/**
 	 * Gets the role.
 	 *
 	 * @return the role
 	 */
+
+
 	public RoleType getRole() {
 		return role;
 	}

@@ -21,7 +21,7 @@ public class UserConversor {
 	 */
 	public static final UserDto toUserDto(User user) {
 		return new UserDto(user.getId(), user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmail(),
-				user.getRole().toString());
+				user.getProfilePicture(), user.getRole().toString());
 	}
 
 	/**
@@ -32,8 +32,12 @@ public class UserConversor {
 	 */
 	public static final User toUser(UserDto userDto) {
 
-		return new User(userDto.getUserName(), userDto.getPassword(), userDto.getFirstName(), userDto.getLastName(),
+		User user = new User(userDto.getUserName(), userDto.getPassword(), userDto.getFirstName(), userDto.getLastName(),
 				userDto.getEmail());
+
+		user.setProfilePicture(userDto.getProfilePicture());
+
+		return user;
 	}
 
 	/**
