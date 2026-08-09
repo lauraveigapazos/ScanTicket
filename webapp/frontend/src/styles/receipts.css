@@ -1,0 +1,102 @@
+/* ===== RECEIPT DETAILS ===== */
+
+.page-header-back {
+    @apply inline-flex items-center justify-center w-10 h-10
+    rounded-full text-myrtle
+    hover:bg-smoke transition-colors
+    focus:outline-none focus:ring-2 focus:ring-cambridge;
+}
+
+.receipt-detail-hero {
+    @apply bg-white rounded-xl border border-timberwolf
+    shadow-sm p-6 text-center;
+}
+
+.receipt-detail-icon {
+    @apply inline-flex items-center justify-center
+    w-14 h-14 rounded-full
+    bg-cambridge/20 text-myrtle mb-4;
+}
+
+.receipt-detail-store {
+    @apply text-xl font-bold text-slate-gray;
+}
+
+.receipt-detail-date {
+    @apply text-sm text-slate-gray/60 mt-1;
+}
+
+.receipt-detail-total {
+    @apply text-4xl font-bold text-slate-gray mt-5;
+}
+
+.receipt-detail-meta {
+    @apply inline-flex items-center justify-center
+    px-3 py-1 mt-4
+    rounded-full
+    bg-cambridge/10
+    text-sm font-semibold text-myrtle;
+}
+
+.receipt-info-row {
+    @apply flex items-start justify-between gap-4
+    text-sm;
+}
+
+.receipt-info-row span {
+    @apply text-slate-gray/60;
+}
+
+.receipt-info-row strong {
+    @apply text-slate-gray text-right;
+}
+
+.receipt-item {
+    @apply px-5 py-4 border-b border-timberwolf
+    last:border-b-0;
+}
+
+.receipt-item-name {
+    @apply text-sm font-semibold text-slate-gray;
+}
+
+.receipt-item-info {
+    @apply flex items-center gap-2 mt-1
+    text-xs text-slate-gray/60;
+}
+
+.receipt-item-total {
+    @apply text-sm font-bold text-slate-gray
+    whitespace-nowrap;
+}
+
+.badge-category {
+    @apply inline-block px-3 py-1 rounded-full
+    text-xs font-semibold font-heading
+    bg-smoke text-slate-gray
+    border border-timberwolf;
+}
+
+.badge-tax {
+    @apply inline-block px-3 py-1 rounded-full
+    text-xs font-semibold font-heading
+    bg-sunset/10 text-slate-gray
+    border border-sunset/30;
+}
+
+.receipt-total-row {
+    @apply flex items-center justify-between
+    text-sm text-slate-gray/70;
+}
+
+.receipt-total-row strong {
+    @apply text-slate-gray font-semibold;
+}
+
+.receipt-total-final {
+    @apply text-base text-slate-gray;
+}
+
+.receipt-total-final strong {
+    @apply text-xl font-bold;
+}

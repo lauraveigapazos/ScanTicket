@@ -19,3 +19,8 @@ Thumbs.db
 .env.local
 .env
 *.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class

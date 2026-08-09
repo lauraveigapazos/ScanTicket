@@ -12,6 +12,7 @@ import ResetPassword from "./users/ResetPassword";
 import Sidebar from "./ui/Sidebar";
 import Profile from "./users/Profile";
 import EditProfile from "./users/EditProfile";
+import ReceiptDetails from "./receipts/ReceiptDetails";
 
 const Body = () => {
   return (
@@ -43,6 +44,7 @@ const Body = () => {
                   <Route path="home" element={<Home />} />
                   <Route path="profile/:id" element={<Profile />} />
                   <Route path="profile/:id/edit" element={<EditProfile />} />
+                  <Route path="receipts/:receiptId" element={<ReceiptDetails />} />
               </Route>
           </Route>
 

@@ -4,6 +4,7 @@ import {logout, tryLoginFromServiceToken} from '../../../backend/userService';
 import { getUserReceipts } from '../../../backend/receiptService';
 import ReceiptUpload from '../components/receipts/ReceiptUpload';
 import '../../../styles/profile.css';
+import '../../../styles/receipts.css';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -135,10 +136,16 @@ const Home = () => {
                         </h3>
                         <div className="space-y-2">
                             {receipts.map((receipt) => (
-                                <div key={receipt.id} className="card">
+                                <button
+                                    key={receipt.id}
+                                    type="button"
+                                    onClick={() => navigate(`/receipts/${receipt.id}`)}
+                                    className="receipt-card w-full text-left"
+                                >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-myrtle/20">
+                                            <div
+                                                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-myrtle/20">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     className="h-5 w-5 text-myrtle"
@@ -149,9 +156,10 @@ const Home = () => {
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 >
-                                                    <circle cx="9" cy="21" r="1" />
-                                                    <circle cx="20" cy="21" r="1" />
-                                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                                                    <circle cx="9" cy="21" r="1"/>
+                                                    <circle cx="20" cy="21" r="1"/>
+                                                    <path
+                                                        d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                                                 </svg>
                                             </div>
                                             <div>
@@ -187,7 +195,7 @@ const Home = () => {
                                             }
                                         </p>
                                     </div>
-                                </div>
+                                </button>
                             ))}
                         </div>
                     </div>
