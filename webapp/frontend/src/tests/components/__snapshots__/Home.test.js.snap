@@ -16,12 +16,13 @@ exports[`Home renders correctly 1`] = `
         Este mes
       </h1>
       <button
-        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-myrtle/20 hover:bg-myrtle/30 transition-colors"
+        aria-label="Ver perfil"
+        className="home-profile-button"
         onClick={[Function]}
-        title="Cerrar sesión"
+        title="Ver perfil"
       >
         <svg
-          className="h-6 w-6 text-myrtle"
+          className="home-profile-icon"
           fill="none"
           stroke="currentColor"
           strokeLinecap="round"

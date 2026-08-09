@@ -1,16 +1,39 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { logout } from '../../../../backend/userService';
+import {logout, tryLoginFromServiceToken} from '../../../../backend/userService';
 
 const Sidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
+    const [profile, setProfile] = useState(null);
+
+    //load user profile
+    useEffect(() => {
+        tryLoginFromServiceToken(
+            (authenticatedUser) => {
+                if (authenticatedUser?.user) {
+                    setProfile(authenticatedUser.user);
+                }
+            },
+            (error) => {
+                console.error("Failed to authenticate:", error);
+            }
+        );
+    }, []);
 
     const handleLogout = () => {
         logout();
         setIsOpen(false);
         navigate('/users/login');
+    };
+
+
+    const handleProfileClick = () => {
+        if (profile?.id) {
+            navigate(`/profile/${profile.id}`);
+            setIsOpen(false);
+        }
     };
 
     const handleNavigation = (path) => {
@@ -25,7 +48,7 @@ const Sidebar = () => {
         { label: 'Subir ticket', path: '/receipts/upload', icon: 'upload' },
         { label: 'Historial', path: '/history', icon: 'history' },
         { label: 'Análisis', path: '/statistics', icon: 'analytics' },
-        { label: 'Perfil', path: '/profile', icon: 'profile' },
+        { label: 'Perfil', path: `/profile/${profile?.id}`, icon: 'profile', disabled: !profile?.id },
         { label: 'Ajustes', path: '/settings', icon: 'settings' },
     ];
 
@@ -67,8 +90,10 @@ const Sidebar = () => {
                 </button>
                 <h1 className="text-lg font-bold text-slate-gray font-heading flex-1 ml-4">Este mes</h1>
                 <button
+                    onClick={handleProfileClick}
                     className="p-2 rounded-full bg-cambridge hover:bg-primary transition-colors flex-shrink-0"
                     aria-label="Profile"
+                    title="Ver perfil"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

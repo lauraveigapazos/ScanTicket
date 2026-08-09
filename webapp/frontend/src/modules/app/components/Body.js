@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Navigate, Route, Routes} from "react-router-dom";
+import {Navigate, Outlet, Route, Routes} from "react-router-dom";
 
 import Home from "./Home";
 import Login from "./users/Login";
@@ -10,6 +10,8 @@ import RequiresLogin from "../common/RequiresLogin";
 import ForgotPassword from "./users/ForgotPassword";
 import ResetPassword from "./users/ResetPassword";
 import Sidebar from "./ui/Sidebar";
+import Profile from "./users/Profile";
+import EditProfile from "./users/EditProfile";
 
 const Body = () => {
   return (
@@ -33,15 +35,14 @@ const Body = () => {
                       <div className="flex min-h-screen bg-viridian">
                           <Sidebar />
                           <main className="flex-1 md:ml-64">
-                              <Routes>
-                                  <Route path="home" element={<Home />} />
-                                  {/* other protected routes */}
-                              </Routes>
+                              <Outlet />
                           </main>
                       </div>
                   }
               >
-                <Route path="home" element={<Home />} />
+                  <Route path="home" element={<Home />} />
+                  <Route path="profile/:id" element={<Profile />} />
+                  <Route path="profile/:id/edit" element={<EditProfile />} />
               </Route>
           </Route>
 

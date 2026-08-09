@@ -1,15 +1,32 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../../backend/userService';
+import {logout, tryLoginFromServiceToken} from '../../../backend/userService';
 import { getUserReceipts } from '../../../backend/receiptService';
 import ReceiptUpload from '../components/receipts/ReceiptUpload';
+import '../../../styles/profile.css';
 
 const Home = () => {
     const navigate = useNavigate();
     const [receipts, setReceipts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [profile, setProfile] = useState(null);
 
+    //load user profile
+    useEffect(() => {
+        tryLoginFromServiceToken(
+            (authenticatedUser) => {
+                if (authenticatedUser?.user) {
+                    setProfile(authenticatedUser.user);
+                }
+            },
+            (error) => {
+                console.error("Failed to authenticate:", error);
+            }
+        );
+    }, []);
+
+    //load receipts
     useEffect(() => {
         loadReceipts();
     }, []);
@@ -33,6 +50,12 @@ const Home = () => {
         );
     };
 
+    const handleProfileClick = () => {
+        if (profile?.id) {
+            navigate(`/profile/${profile.id}`);
+        }
+    };
+
     const handleLogout = () => {
         logout();
         navigate('/users/login');
@@ -49,24 +72,32 @@ const Home = () => {
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold text-slate-gray">Este mes</h1>
                     <button
-                        onClick={handleLogout}
-                        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-myrtle/20 hover:bg-myrtle/30 transition-colors"
-                        title="Cerrar sesión"
+                        onClick={handleProfileClick}
+                        className="home-profile-button"
+                        title="Ver perfil"
+                        aria-label="Ver perfil"
                     >
-                        {/* profile icon */}
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-myrtle"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
+                        {profile?.profilePicture ? (
+                            <img
+                                src={`data:image/jpeg;base64,${profile.profilePicture}`}
+                                alt={`${profile.firstName} ${profile.lastName}`}
+                                className="home-profile-image"
+                            />
+                        ) : (
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="home-profile-icon"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        )}
                     </button>
                 </div>
             </div>
@@ -77,7 +108,7 @@ const Home = () => {
                     <h2 className="text-lg font-semibold text-slate-gray mb-4">
                         Añadir nuevo recibo
                     </h2>
-                    <ReceiptUpload onUploadSuccess={handleUploadSuccess} />
+                    <ReceiptUpload onUploadSuccess={handleUploadSuccess}/>
                 </div>
 
                 {error && (
