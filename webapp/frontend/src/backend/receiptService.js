@@ -26,3 +26,10 @@ export const getUserReceipts = (onSuccess, onErrors) =>
         onSuccess,
         onErrors
     );
+
+export const deleteReceipt = (receiptId, onSuccess, onErrors) => appFetch(
+    `/receipts/${receiptId}`,
+    fetchConfig("DELETE"),
+    onSuccess,
+    onErrors
+)

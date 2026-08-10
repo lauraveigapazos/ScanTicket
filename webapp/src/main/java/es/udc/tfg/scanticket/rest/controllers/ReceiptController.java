@@ -99,4 +99,10 @@ public class ReceiptController {
         List<ReceiptDto> receiptDtos = ReceiptConversor.toReceiptDtos(receipts);
         return ResponseEntity.ok(receiptDtos);
     }
+
+    @DeleteMapping("/{receiptId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReceipt(@RequestAttribute Long userId, @PathVariable Long receiptId) throws InstanceNotFoundException{
+        receiptService.deleteReceipt(userId, receiptId);
+    }
 }

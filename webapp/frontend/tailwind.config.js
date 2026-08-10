@@ -15,6 +15,7 @@ module.exports = {
                 'timberwolf': '#CFD5D1',    //borders
                 'sunset': '#E8C48D',        //warn
                 'melon': '#EBAA9A',         //error
+                'coral': '#D47F72',         //strong error/error hover
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],

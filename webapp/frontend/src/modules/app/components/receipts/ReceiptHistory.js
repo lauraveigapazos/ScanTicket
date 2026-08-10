@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUserReceipts } from '../../../../backend/receiptService';
+import { getUserReceipts, deleteReceipt } from '../../../../backend/receiptService';
 import '../../../../styles/history.css';
 
 const History = () => {
@@ -9,6 +9,9 @@ const History = () => {
     const [receipts, setReceipts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [receiptToDelete, setReceiptToDelete] = useState(null);
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
         loadReceipts();
@@ -123,6 +126,52 @@ const History = () => {
             style: 'currency',
             currency: 'EUR'
         }).format(number);
+    };
+
+    const handleDeleteClick = (event, receipt) => {
+        event.stopPropagation();
+        setReceiptToDelete(receipt);
+    };
+
+    const handleCancelDelete = () => {
+        if (deleting) {
+            return;
+        }
+
+        setReceiptToDelete(null);
+    };
+
+    const handleConfirmDelete = () => {
+        if (!receiptToDelete || deleting) {
+            return;
+        }
+
+        setDeleting(true);
+
+        deleteReceipt(
+            receiptToDelete.id,
+            () => {
+                setReceipts((currentReceipts) =>
+                    currentReceipts.filter(
+                        (receipt) => receipt.id !== receiptToDelete.id
+                    )
+                );
+
+                setReceiptToDelete(null);
+                setDeleting(false);
+            },
+            (errors) => {
+                console.error('Failed to delete receipt:', errors);
+
+                setError(
+                    errors?.message ||
+                    errors?.error ||
+                    'No se pudo eliminar el recibo'
+                );
+
+                setDeleting(false);
+            }
+        );
     };
 
     const handleReceiptClick = (receiptId) => {
@@ -253,19 +302,22 @@ const History = () => {
 
                             <div className="space-y-3">
                                 {receipts.map((receipt) => (
-                                    <button
+                                    <div
                                         key={receipt.id}
-                                        type="button"
-                                        onClick={() =>
-                                            handleReceiptClick(
-                                                receipt.id
-                                            )
-                                        }
-                                        className="receipt-card history-receipt-card w-full text-left"
+                                        className="receipt-card history-receipt-card"
+                                        onClick={() => navigate(`/receipts/${receipt.id}`)}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Enter' || event.key === ' ') {
+                                                navigate(`/receipts/${receipt.id}`);
+                                            }
+                                        }}
                                     >
-                                        <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-3 min-w-0">
 
-                                            <div className="receipt-card-icon">
+                                            {/* icon */}
+                                            <div className="receipt-card-icon flex-shrink-0">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     className="h-5 w-5 text-myrtle"
@@ -276,41 +328,60 @@ const History = () => {
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 >
-                                                    <circle
-                                                        cx="9"
-                                                        cy="21"
-                                                        r="1"
-                                                    />
-                                                    <circle
-                                                        cx="20"
-                                                        cy="21"
-                                                        r="1"
-                                                    />
+                                                    <circle cx="9" cy="21" r="1" />
+                                                    <circle cx="20" cy="21" r="1" />
                                                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                                                 </svg>
                                             </div>
 
-                                            <div className="min-w-0 flex-1">
+                                            {/* store + date */}
+                                            <div className="min-w-0">
                                                 <p className="receipt-card-store truncate">
-                                                    {receipt.store ||
-                                                        'Tienda desconocida'}
+                                                    {receipt.store || 'Tienda desconocida'}
                                                 </p>
 
                                                 <p className="receipt-card-date">
-                                                    {formatDate(receipt)}
+                                                    {receipt.date && receipt.time
+                                                        ? new Date(
+                                                            `${receipt.date}T${receipt.time}`
+                                                        ).toLocaleDateString('es-ES', {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })
+                                                        : receipt.createdAt
+                                                            ? new Date(receipt.createdAt).toLocaleDateString(
+                                                                'es-ES',
+                                                                {
+                                                                    day: '2-digit',
+                                                                    month: '2-digit',
+                                                                    year: 'numeric',
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit'
+                                                                }
+                                                            )
+                                                            : 'Fecha no disponible'
+                                                    }
                                                 </p>
                                             </div>
+                                        </div>
 
-                                            <div className="flex items-center gap-2">
-                                                <p className="receipt-card-amount">
-                                                    {formatMoney(
-                                                        receipt.total
-                                                    )}
-                                                </p>
+                                        {/* delete + amount */}
+                                        <div className="history-receipt-actions">
 
+                                            <button
+                                                type="button"
+                                                className="history-delete-button"
+                                                onClick={(event) => handleDeleteClick(event, receipt)}
+                                                aria-label={`Eliminar recibo de ${
+                                                    receipt.store || 'tienda desconocida'
+                                                }`}
+                                            >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-4 w-4 text-cambridge flex-shrink-0"
+                                                    className="h-4 w-4"
                                                     viewBox="0 0 24 24"
                                                     fill="none"
                                                     stroke="currentColor"
@@ -318,17 +389,120 @@ const History = () => {
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                 >
-                                                    <path d="m9 18 6-6-6-6" />
+                                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                                    <line x1="6" y1="6" x2="18" y2="18" />
                                                 </svg>
+                                            </button>
+
+                                            <div className="history-receipt-amount">
+                                                <span>
+                                                    {receipt.total && receipt.total > 0
+                                                        ? `${parseFloat(receipt.total)
+                                                            .toFixed(2)
+                                                            .replace('.', ',')} €`
+                                                        : '-'}
+                                                </span>
+
+                                                <div className="history-receipt-arrow-wrapper">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="history-receipt-arrow"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    >
+                                                        <polyline points="9 18 15 12 9 6"/>
+                                                    </svg>
+                                                </div>
                                             </div>
                                         </div>
-                                    </button>
+                                    </div>
                                 ))}
                             </div>
                         </section>
                     )}
-
             </main>
+
+            {/* delete confirmation popup */}
+            {receiptToDelete && (
+                <div
+                    className="history-modal-backdrop"
+                    onClick={handleCancelDelete}
+                >
+                    <div
+                        className="history-confirmation-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="delete-receipt-title"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <div className="history-confirmation-icon">
+                            {/* icon */}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6l-1 14H6L4 6"/>
+                                <path d="M10 11v6"/>
+                                <path d="M14 11v6"/>
+                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                            </svg>
+                        </div>
+
+                        <h2
+                            id="delete-receipt-title"
+                            className="history-confirmation-title"
+                        >
+                            ¿Eliminar recibo?
+                        </h2>
+
+                        <p className="history-confirmation-text">
+                            ¿Seguro que quieres eliminar el recibo de{' '}
+                            <strong>
+                                {receiptToDelete.store || 'tienda desconocida'}
+                            </strong>
+                            ? Esta acción no se puede deshacer.
+                        </p>
+
+                        <div className="history-confirmation-actions">
+                            <button
+                                type="button"
+                                onClick={handleCancelDelete}
+                                disabled={deleting}
+                                className="btn-secondary history-confirmation-cancel"
+                            >
+                                Cancelar
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleConfirmDelete}
+                                disabled={deleting}
+                                className="history-delete-confirm-button"
+                            >
+                                {deleting ? (
+                                    <>
+                                        <span className="history-delete-spinner" />
+                                        Eliminando...
+                                    </>
+                                ) : (
+                                    'Eliminar'
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
