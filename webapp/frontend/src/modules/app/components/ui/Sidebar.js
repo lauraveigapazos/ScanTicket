@@ -46,7 +46,7 @@ const Sidebar = () => {
     const navItems = [
         { label: 'Inicio', path: '/home', icon: 'home' },
         { label: 'Subir ticket', path: '/receipts/upload', icon: 'upload' },
-        { label: 'Historial', path: '/history', icon: 'history' },
+        { label: 'Historial', path: '/receipts', icon: 'history' },
         { label: 'Análisis', path: '/statistics', icon: 'analytics' },
         { label: 'Perfil', path: `/profile/${profile?.id}`, icon: 'profile', disabled: !profile?.id },
         { label: 'Ajustes', path: '/settings', icon: 'settings' },

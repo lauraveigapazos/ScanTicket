@@ -13,6 +13,7 @@ import Sidebar from "./ui/Sidebar";
 import Profile from "./users/Profile";
 import EditProfile from "./users/EditProfile";
 import ReceiptDetails from "./receipts/ReceiptDetails";
+import ReceiptHistory from "./receipts/ReceiptHistory";
 
 const Body = () => {
   return (
@@ -44,6 +45,7 @@ const Body = () => {
                   <Route path="home" element={<Home />} />
                   <Route path="profile/:id" element={<Profile />} />
                   <Route path="profile/:id/edit" element={<EditProfile />} />
+                  <Route path="/receipts" element={<ReceiptHistory />} />
                   <Route path="receipts/:receiptId" element={<ReceiptDetails />} />
               </Route>
           </Route>

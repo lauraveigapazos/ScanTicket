@@ -1,0 +1,41 @@
+/* ===== HISTORY ===== */
+
+.history-add-button {
+    @apply inline-flex items-center justify-center
+    w-10 h-10 rounded-full
+    bg-myrtle text-white
+    hover:bg-viridian
+    transition-colors
+    focus:outline-none
+    focus:ring-2
+    focus:ring-cambridge
+    focus:ring-offset-2;
+}
+
+.history-heading {
+    @apply flex items-center justify-between mb-4;
+}
+
+.history-receipt-card {
+    @apply p-4;
+}
+
+.history-empty {
+    @apply flex flex-col items-center justify-center
+    text-center py-16 px-6;
+}
+
+.history-empty-icon {
+    @apply flex items-center justify-center
+    w-16 h-16 rounded-full
+    bg-cambridge/20 text-myrtle mb-4;
+}
+
+.history-empty-title {
+    @apply text-lg font-bold text-slate-gray;
+}
+
+.history-empty-text {
+    @apply text-sm text-slate-gray/60
+    max-w-xs mt-2;
+}
