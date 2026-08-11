@@ -111,30 +111,6 @@
         @apply text-3xl font-bold text-slate-gray mt-2 font-heading;
     }
 
-    /* ===== RECEIPT CARD ===== */
-    .receipt-card {
-        @apply card cursor-pointer hover:shadow-md transition-all hover:border-cambridge;
-    }
-
-    .receipt-card-icon {
-        @apply inline-flex items-center justify-center w-12 h-12 rounded-lg bg-cambridge/20;
-    }
-
-    .receipt-card-content {
-        @apply flex items-center gap-3;
-    }
-
-    .receipt-card-store {
-        @apply font-semibold text-slate-gray font-heading;
-    }
-
-    .receipt-card-date {
-        @apply text-sm text-slate-gray/60 font-sans;
-    }
-
-    .receipt-card-amount {
-        @apply font-bold text-slate-gray font-heading text-lg;
-    }
 
     /* ===== UPLOAD AREA ===== */
     .upload-area {

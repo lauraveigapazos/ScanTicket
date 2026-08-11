@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {logout, tryLoginFromServiceToken} from '../../../backend/userService';
 import { getUserReceipts } from '../../../backend/receiptService';
 import ReceiptUpload from '../components/receipts/ReceiptUpload';
+import ReceiptCard from '../components/receipts/ReceiptCard';
 import '../../../styles/profile.css';
 import '../../../styles/receipts.css';
 
@@ -57,37 +58,111 @@ const Home = () => {
         }
     };
 
-    const handleLogout = () => {
-        logout();
-        navigate('/users/login');
-    };
-
     const handleUploadSuccess = (newReceipt) => {
         setReceipts([newReceipt, ...receipts]);
     };
 
-    return (
-        <div className="min-h-screen bg-smoke">
-            {/* header */}
-            <div className="sticky top-0 z-10 bg-white border-b border-timberwolf/30 px-5 py-4">
-                <div className="flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-slate-gray">Este mes</h1>
-                    <button
-                        onClick={handleProfileClick}
-                        className="home-profile-button"
-                        title="Ver perfil"
-                        aria-label="Ver perfil"
-                    >
-                        {profile?.profilePicture ? (
-                            <img
-                                src={`data:image/jpeg;base64,${profile.profilePicture}`}
-                                alt={`${profile.firstName} ${profile.lastName}`}
-                                className="home-profile-image"
-                            />
-                        ) : (
+        return (
+            <div className="min-h-screen bg-smoke">
+                {/* header */}
+                <div className="sticky top-0 z-10 bg-white border-b border-timberwolf/30 px-5 py-4">
+                    <div className="flex items-center justify-between">
+                        <h1 className="text-2xl font-bold text-slate-gray">Este mes</h1>
+                        <button
+                            onClick={handleProfileClick}
+                            className="home-profile-button"
+                            title="Ver perfil"
+                            aria-label="Ver perfil"
+                        >
+                            {profile?.profilePicture ? (
+                                <img
+                                    src={`data:image/jpeg;base64,${profile.profilePicture}`}
+                                    alt={`${profile.firstName} ${profile.lastName}`}
+                                    className="home-profile-image"
+                                />
+                            ) : (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="home-profile-icon"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            )}
+                        </button>
+                    </div>
+                </div>
+
+                <div className="px-5 py-6 space-y-6 pb-20">
+                    {/* upload */}
+                    <div className="card">
+                        <h2 className="text-lg font-semibold text-slate-gray mb-4">
+                            Añadir nuevo recibo
+                        </h2>
+                        <ReceiptUpload onUploadSuccess={handleUploadSuccess}/>
+                    </div>
+
+                    {error && (
+                        <div className="p-4 rounded-lg bg-melon/10 border border-melon/30 text-sm text-melon font-sans">
+                            {error}
+                        </div>
+                    )}
+
+                    {/* stats placeholder */}
+                    {!loading && receipts.length > 0 && (
+                        <div className="space-y-3">
+                            <h3 className="text-sm font-semibold text-slate-gray uppercase tracking-wide">
+                                Estadísticas
+                            </h3>
+                            {/* stats here */}
+                        </div>
+                    )}
+
+                    {/* last receipts */}
+                    {!loading && receipts.length > 0 && (
+                        <div className="space-y-3">
+                            <h3 className="text-sm font-semibold text-slate-gray uppercase tracking-wide">
+                                Últimos recibos
+                            </h3>
+                            <div className="space-y-2">
+                                {receipts.map((receipt) => (
+                                    <ReceiptCard
+                                        key={receipt.id}
+                                        receipt={receipt}
+                                        onDeleted={(deletedId) => {
+                                            setReceipts((currentReceipts) =>
+                                                currentReceipts.filter(
+                                                    (item) => item.id !== deletedId
+                                                )
+                                            );
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* loading */}
+                    {loading && (
+                        <div className="text-center py-12">
+                        <div className="inline-flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-4 border-cambridge border-t-myrtle"></div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* empty */}
+                    {!loading && receipts.length === 0 && !error && (
+                        <div className="text-center py-12">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="home-profile-icon"
+                                className="h-12 w-12 text-cambridge mx-auto mb-3 opacity-50"
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
@@ -95,146 +170,18 @@ const Home = () => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                             >
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                <circle cx="12" cy="7" r="4"/>
+                                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z" />
+                                <path d="M8 10h8" />
+                                <path d="M8 14h4" />
                             </svg>
-                        )}
-                    </button>
+                            <p className="text-cambridge font-sans text-sm">
+                                Carga tu primer recibo para comenzar
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
-
-            <div className="px-5 py-6 space-y-6 pb-20">
-                {/* upload */}
-                <div className="card">
-                    <h2 className="text-lg font-semibold text-slate-gray mb-4">
-                        Añadir nuevo recibo
-                    </h2>
-                    <ReceiptUpload onUploadSuccess={handleUploadSuccess}/>
-                </div>
-
-                {error && (
-                    <div className="p-4 rounded-lg bg-melon/10 border border-melon/30 text-sm text-melon font-sans">
-                        {error}
-                    </div>
-                )}
-
-                {/* stats placeholder */}
-                {!loading && receipts.length > 0 && (
-                    <div className="space-y-3">
-                        <h3 className="text-sm font-semibold text-slate-gray uppercase tracking-wide">
-                            Estadísticas
-                        </h3>
-                        {/* stats here */}
-                    </div>
-                )}
-
-                {/* last receipts */}
-                {!loading && receipts.length > 0 && (
-                    <div className="space-y-3">
-                        <h3 className="text-sm font-semibold text-slate-gray uppercase tracking-wide">
-                            Últimos recibos
-                        </h3>
-                        <div className="space-y-2">
-                            {receipts.map((receipt) => (
-                                <button
-                                    key={receipt.id}
-                                    type="button"
-                                    onClick={() => navigate(`/receipts/${receipt.id}`)}
-                                    className="receipt-card w-full text-left"
-                                >
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <div
-                                                className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-myrtle/20">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-5 w-5 text-myrtle"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                >
-                                                    <circle cx="9" cy="21" r="1"/>
-                                                    <circle cx="20" cy="21" r="1"/>
-                                                    <path
-                                                        d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                                                </svg>
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-slate-gray">
-                                                    {receipt.store || 'Tienda desconocida'}
-                                                </p>
-                                                <p className="text-xs text-cambridge font-sans">
-                                                    {receipt.date && receipt.time
-                                                        ? new Date(`${receipt.date}T${receipt.time}`).toLocaleDateString('es-ES', {
-                                                            day: '2-digit',
-                                                            month: '2-digit',
-                                                            year: 'numeric',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })
-                                                        : receipt.createdAt
-                                                            ? new Date(receipt.createdAt).toLocaleDateString('es-ES', {
-                                                                day: '2-digit',
-                                                                month: '2-digit',
-                                                                year: 'numeric',
-                                                                hour: '2-digit',
-                                                                minute: '2-digit'
-                                                            })
-                                                            : 'Fecha no disponible'
-                                                    }
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <p className="font-semibold text-slate-gray">
-                                            {receipt.total && receipt.total > 0
-                                                ? `€${parseFloat(receipt.total).toFixed(2)}`
-                                                : '-'
-                                            }
-                                        </p>
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* loading */}
-                {loading && (
-                    <div className="text-center py-12">
-                        <div className="inline-flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-4 border-cambridge border-t-myrtle"></div>
-                        </div>
-                    </div>
-                )}
-
-                {/* empty */}
-                {!loading && receipts.length === 0 && !error && (
-                    <div className="text-center py-12">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-12 w-12 text-cambridge mx-auto mb-3 opacity-50"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z" />
-                            <path d="M8 10h8" />
-                            <path d="M8 14h4" />
-                        </svg>
-                        <p className="text-cambridge font-sans text-sm">
-                            Carga tu primer recibo para comenzar
-                        </p>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
+        );
+    };
 
 export default Home;
