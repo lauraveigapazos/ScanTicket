@@ -191,21 +191,49 @@ public class ReceiptServiceImpl implements ReceiptService{
         return receiptDao.findByUserIdOrderByDateDesc(userId);
     }
 
+
     @Override
-    public ReceiptItem updateReceiptItem(Long userId, Long receiptId, Long itemId, String userCategory) {
+    public void updateReceipt(Long userId, Long receiptId, String store, String storeCif, LocalDate date, LocalTime time,
+                                  String address, String phoneNumber, BigDecimal subtotal, BigDecimal taxAmount, BigDecimal total,
+                                  String paymentMethod) throws InstanceNotFoundException{
 
         Receipt receipt = receiptDao.findByIdAndUserId(receiptId, userId)
-                .orElseThrow(() -> new RuntimeException("Receipt not found or access denied"));
+                .orElseThrow(() -> new InstanceNotFoundException("project.entities.receipt", receiptId));
+
+        receipt.setStore(store);
+        receipt.setStoreCif(storeCif);
+        receipt.setDate(date);
+        receipt.setTime(time);
+        receipt.setAddress(address);
+        receipt.setPhoneNumber(phoneNumber);
+        receipt.setSubtotal(subtotal);
+        receipt.setTaxAmount(taxAmount);
+        receipt.setTotal(total);
+        receipt.setPaymentMethod(paymentMethod);
+
+        receiptDao.save(receipt);
+    }
+    @Override
+    public void updateReceiptItem(Long userId, Long receiptId, Long itemId, String name, BigDecimal quantity, String unit,
+                           BigDecimal unitPrice, BigDecimal totalPrice, String category, String tax) throws InstanceNotFoundException {
+
+        Receipt receipt = receiptDao.findByIdAndUserId(receiptId, userId)
+                .orElseThrow(() -> new InstanceNotFoundException("project.entities.receipt", receiptId));
 
         ReceiptItem item = receipt.getItems().stream()
                 .filter(i -> i.getId().equals(itemId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        //item.setUserCategory(userCategory);
-        receiptDao.save(receipt);
+        item.setName(name);
+        item.setQuantity(quantity);
+        item.setUnit(unit);
+        item.setUnitPrice(unitPrice);
+        item.setTotalPrice(totalPrice);
+        item.setCategory(category);
+        item.setTax(tax);
 
-        return item;
+        receiptDao.save(receipt);
     }
 
     @Override

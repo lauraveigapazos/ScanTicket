@@ -180,12 +180,108 @@ public class ReceiptServiceTest {
         verify(receiptDao, times(1)).save(any(Receipt.class));
     }
 
-    @Test(expected = RuntimeException.class)
-    public void testUpdateReceiptItem_ReceiptNotFound(){
+    @Test
+    public void testUpdateReceipt_Success() throws InstanceNotFoundException {
+
+        when(receiptDao.findByIdAndUserId(1L, 1L))
+                .thenReturn(Optional.of(testReceipt));
+
+        receiptService.updateReceipt(1L, 1L, "Updated Store", "B12345678",
+                LocalDate.of(2025, 8, 1), LocalTime.of(10, 30),
+                "Updated Address", "600123456", BigDecimal.valueOf(20.00),
+                BigDecimal.valueOf(2.00), BigDecimal.valueOf(22.00), "CARD");
+
+        assertEquals("Updated Store", testReceipt.getStore());
+        assertEquals("B12345678", testReceipt.getStoreCif());
+        assertEquals(LocalDate.of(2025, 8, 1), testReceipt.getDate());
+        assertEquals(LocalTime.of(10, 30), testReceipt.getTime());
+        assertEquals("Updated Address", testReceipt.getAddress());
+        assertEquals("600123456", testReceipt.getPhoneNumber());
+        assertEquals(BigDecimal.valueOf(20.00), testReceipt.getSubtotal());
+        assertEquals(BigDecimal.valueOf(2.00), testReceipt.getTaxAmount());
+        assertEquals(BigDecimal.valueOf(22.00), testReceipt.getTotal());
+        assertEquals("CARD", testReceipt.getPaymentMethod());
+
+        verify(receiptDao).save(testReceipt);
+    }
+
+    @Test(expected = InstanceNotFoundException.class)
+    public void testUpdateReceipt_ReceiptNotFound() throws InstanceNotFoundException {
+
+        when(receiptDao.findByIdAndUserId(999L, 1L))
+                .thenReturn(Optional.empty());
+
+        receiptService.updateReceipt(
+                1L,
+                999L,
+                "Updated Store",
+                "B12345678",
+                LocalDate.of(2025, 8, 1),
+                LocalTime.of(10, 30),
+                "Updated Address",
+                "600123456",
+                BigDecimal.valueOf(20.00),
+                BigDecimal.valueOf(2.00),
+                BigDecimal.valueOf(22.00),
+                "CARD"
+        );
+    }
+
+    @Test
+    public void testUpdateReceiptItem_Success() throws InstanceNotFoundException {
+
+        ReceiptItem item = new ReceiptItem();
+        item.setId(1L);
+        item.setName("Old Product");
+        item.setQuantity(BigDecimal.ONE);
+        item.setUnit("unit");
+        item.setUnitPrice(BigDecimal.valueOf(2.00));
+        item.setTotalPrice(BigDecimal.valueOf(2.00));
+        item.setCategory("Other");
+        item.setTax("21%");
+
+        testReceipt.setItems(new ArrayList<>());
+        testReceipt.getItems().add(item);
+
+        when(receiptDao.findByIdAndUserId(1L, 1L))
+                .thenReturn(Optional.of(testReceipt));
+
+        receiptService.updateReceiptItem(1L, 1L, 1L, "New Product",
+                BigDecimal.valueOf(2), "kg", BigDecimal.valueOf(3.50), BigDecimal.valueOf(7.00),
+                "Alimentación", "10%");
+
+        assertEquals("New Product", item.getName());
+        assertEquals(BigDecimal.valueOf(2), item.getQuantity());
+        assertEquals("kg", item.getUnit());
+        assertEquals(BigDecimal.valueOf(3.50), item.getUnitPrice());
+        assertEquals(BigDecimal.valueOf(7.00), item.getTotalPrice());
+        assertEquals("Alimentación", item.getCategory());
+        assertEquals("10%", item.getTax());
+
+        verify(receiptDao).save(testReceipt);
+    }
+
+    @Test(expected = InstanceNotFoundException.class)
+    public void testUpdateReceiptItem_ReceiptNotFound() throws InstanceNotFoundException {
 
         when(receiptDao.findByIdAndUserId(999L, 1L)).thenReturn(Optional.empty());
 
-        receiptService.updateReceiptItem(1L, 999L, 1L, "Alimentación");
+        receiptService.updateReceiptItem(1L, 999L, 1L, "Test Product",
+                BigDecimal.ONE, "unit", BigDecimal.valueOf(2.50), BigDecimal.valueOf(2.50),
+                "Alimentación", "21%");
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testUpdateReceiptItem_ItemNotFound() throws InstanceNotFoundException {
+
+        testReceipt.setItems(new ArrayList<>());
+
+        when(receiptDao.findByIdAndUserId(1L, 1L))
+                .thenReturn(Optional.of(testReceipt));
+
+        receiptService.updateReceiptItem(1L, 1L, 999L, "New Product",
+                BigDecimal.ONE, "unit", BigDecimal.valueOf(2.50), BigDecimal.valueOf(2.50),
+                "Alimentación", "21%");
     }
 
     @Test
