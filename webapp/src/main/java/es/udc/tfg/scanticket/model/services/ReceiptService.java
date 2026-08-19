@@ -28,11 +28,8 @@ public interface ReceiptService {
     List<Receipt> findReceiptsByUser(Long userId);
 
     void updateReceipt(Long userId, Long receiptId, String store, String storeCif, LocalDate date, LocalTime time,
-                                  String address, String phoneNumber, BigDecimal subtotal, BigDecimal taxAmount, BigDecimal total,
-                                  String paymentMethod) throws InstanceNotFoundException;
-
-    void updateReceiptItem(Long userId, Long receiptId, Long itemId, String name, BigDecimal quantity, String unit,
-                           BigDecimal unitPrice, BigDecimal totalPrice, String category, String tax) throws InstanceNotFoundException;
+                       String address, String phoneNumber, BigDecimal subtotal, BigDecimal taxAmount, BigDecimal total,
+                       String paymentMethod, List<ReceiptItem> items) throws InstanceNotFoundException;
     void deleteReceipt(Long userId, Long receiptId);
 
     List<Receipt> findReceiptsByDateRange(Long userId, LocalDate startDate, LocalDate endDate);

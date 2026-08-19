@@ -9,6 +9,29 @@ public class ReceiptItemConversor {
 
     private ReceiptItemConversor(){}
 
+    public static ReceiptItem toReceiptItem(ReceiptItemDto receiptItemDto) {
+
+        ReceiptItem receiptItem = new ReceiptItem();
+
+        receiptItem.setId(receiptItemDto.getId());
+        receiptItem.setName(receiptItemDto.getName());
+        receiptItem.setQuantity(receiptItemDto.getQuantity());
+        receiptItem.setUnit(receiptItemDto.getUnit());
+        receiptItem.setUnitPrice(receiptItemDto.getUnitPrice());
+        receiptItem.setTotalPrice(receiptItemDto.getTotalPrice());
+        receiptItem.setCategory(receiptItemDto.getCategory());
+        receiptItem.setTax(receiptItemDto.getTax());
+
+        return receiptItem;
+    }
+
+    public static List<ReceiptItem> toReceiptItems(List<ReceiptItemDto> receiptItemDtos) {
+
+        return receiptItemDtos.stream()
+                .map(ReceiptItemConversor::toReceiptItem)
+                .collect(Collectors.toList());
+    }
+
     public static ReceiptItemDto toReceiptItemDto(ReceiptItem receiptItem){
 
         ReceiptItemDto receiptItemDto = new ReceiptItemDto();

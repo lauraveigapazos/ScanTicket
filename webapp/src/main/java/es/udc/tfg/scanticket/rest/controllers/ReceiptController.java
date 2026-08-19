@@ -2,6 +2,7 @@ package es.udc.tfg.scanticket.rest.controllers;
 
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
 import es.udc.tfg.scanticket.model.entities.Receipt;
+import es.udc.tfg.scanticket.model.entities.ReceiptItem;
 import es.udc.tfg.scanticket.model.entities.User;
 import es.udc.tfg.scanticket.model.services.ReceiptService;
 import es.udc.tfg.scanticket.model.services.UserService;
@@ -10,6 +11,8 @@ import es.udc.tfg.scanticket.model.services.exceptions.ReceiptProcessingExceptio
 import es.udc.tfg.scanticket.rest.common.ErrorsDto;
 import es.udc.tfg.scanticket.rest.dtos.ReceiptConversor;
 import es.udc.tfg.scanticket.rest.dtos.ReceiptDto;
+import es.udc.tfg.scanticket.rest.dtos.ReceiptItemConversor;
+import es.udc.tfg.scanticket.rest.dtos.ReceiptItemDto;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,6 +101,26 @@ public class ReceiptController {
         List<Receipt> receipts = receiptService.findReceiptsByUser(userId);
         List<ReceiptDto> receiptDtos = ReceiptConversor.toReceiptDtos(receipts);
         return ResponseEntity.ok(receiptDtos);
+    }
+
+    @PutMapping("/{receiptId}")
+    public ResponseEntity<ReceiptDto> updateReceipt(@RequestAttribute Long userId, @PathVariable Long receiptId, @RequestBody ReceiptDto receiptDto)
+            throws InstanceNotFoundException{
+
+        List<ReceiptItem> items = null;
+
+        if (receiptDto.getItems() != null){
+            items = ReceiptItemConversor.toReceiptItems(receiptDto.getItems());
+        }
+
+        receiptService.updateReceipt(userId, receiptId, receiptDto.getStore(),
+                receiptDto.getStoreCif(), receiptDto.getDate(), receiptDto.getTime(),
+                receiptDto.getAddress(), receiptDto.getPhoneNumber(), receiptDto.getSubtotal(),
+                receiptDto.getTaxAmount(), receiptDto.getTotal(), receiptDto.getPaymentMethod(), items);
+
+        Receipt receipt = receiptService.findReceipt(userId, receiptId);
+
+        return ResponseEntity.ok(ReceiptConversor.toReceiptDto(receipt));
     }
 
     @DeleteMapping("/{receiptId}")
