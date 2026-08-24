@@ -1,0 +1,95 @@
+/* ===== STATISTIC CARD ===== */
+.statistic-card {
+    @apply bg-white rounded-xl border border-timberwolf p-4
+    flex flex-col items-start gap-2
+    transition-all duration-200
+    hover:border-cambridge hover:shadow-sm;
+}
+
+.statistic-card-icon {
+    @apply flex items-center justify-center w-10 h-10 rounded-lg
+    bg-cambridge/20 flex-shrink-0;
+}
+
+.statistic-icon {
+    @apply w-5 h-5 text-myrtle;
+}
+
+.statistic-card-content {
+    @apply flex-1 min-w-0;
+}
+
+.statistic-card-label {
+    @apply text-xs font-semibold text-slate-gray/70
+    uppercase tracking-wide font-heading;
+}
+
+.statistic-card-value {
+    @apply text-lg font-bold text-slate-gray font-heading;
+}
+
+/* ===== STATISTICS GRID ===== */
+.statistics-cards-grid {
+    @apply grid grid-cols-3 gap-3;
+}
+
+/* ===== DAILY SPENDING CHART ===== */
+.chart-card {
+    @apply bg-white rounded-xl border border-timberwolf p-5;
+}
+
+.chart-title {
+    @apply text-sm font-semibold text-slate-gray uppercase tracking-wide mb-4;
+}
+
+.chart-container {
+    @apply flex gap-3 h-48;
+}
+
+.chart-y-axis {
+    @apply flex flex-col justify-between text-right text-xs text-slate-gray/60 font-sans flex-shrink-0 w-10;
+}
+
+.chart-y-label {
+    @apply h-0 flex items-center justify-end;
+}
+
+.chart-plot {
+    @apply flex-1 relative;
+}
+
+.chart-svg {
+    @apply w-full h-full;
+}
+
+.chart-grid-line {
+    stroke: #CFD5D1;
+    stroke-width: 1;
+    stroke-dasharray: 2, 2;
+}
+
+.chart-line {
+    stroke: #3D6F68;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.chart-area {
+    fill: #7AA89D;
+    opacity: 0.15;
+}
+
+.chart-dot {
+    fill: #3D6F68;
+    stroke: #FFFFFF;
+    stroke-width: 2;
+}
+
+.chart-x-axis {
+    @apply flex justify-between mt-2 text-xs text-slate-gray/60 font-sans;
+}
+
+.chart-x-label {
+    @apply text-center;
+}
