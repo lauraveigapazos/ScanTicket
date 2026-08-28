@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
 
@@ -17,6 +17,8 @@ import ReceiptHistory from "./receipts/ReceiptHistory";
 import EditReceipt from "./receipts/EditReceipt";
 
 const Body = () => {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <Routes>
       <Route path="/">
@@ -36,9 +38,9 @@ const Body = () => {
               <Route
                   element={
                       <div className="flex min-h-screen bg-viridian">
-                          <Sidebar />
+                          <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}/>
                           <main className="flex-1 md:ml-64">
-                              <Outlet />
+                              <Outlet context={{ sidebarOpen, setSidebarOpen }} />
                           </main>
                       </div>
                   }

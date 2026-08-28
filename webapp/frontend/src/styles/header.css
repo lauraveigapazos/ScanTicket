@@ -1,0 +1,38 @@
+/* ===== HOME HEADER ===== */
+.home-header-top {
+    @apply fixed top-0 left-0 right-0 h-16 bg-smoke border-b border-cambridge/25 px-4 flex items-center justify-between z-30 md:hidden;
+}
+
+.home-header-menu-button {
+    @apply p-2 rounded-lg bg-myrtle hover:bg-myrtle/80 transition-colors flex-shrink-0;
+}
+
+.home-header-menu-icon {
+    @apply h-5 w-5 text-white;
+}
+
+.home-header-mobile-title {
+    @apply text-2xl font-bold font-heading text-slate-gray flex-1 text-center;
+    text-shadow: 0 2px 4px rgba(50, 67, 61, 0.1);
+}
+
+.home-header-profile-button {
+    @apply inline-flex items-center justify-center w-10 h-10 rounded-full bg-cambridge hover:bg-cambridge/80 transition-colors overflow-hidden focus:outline-none focus:ring-2 focus:ring-myrtle focus:ring-offset-2 flex-shrink-0;
+}
+
+.home-header-content {
+    @apply sticky top-0 z-20 bg-smoke px-5 py-4 hidden md:flex items-start justify-between;
+}
+
+.home-header-title {
+    @apply text-3xl font-bold font-heading text-slate-gray;
+    text-shadow: 0 2px 4px rgba(50, 67, 61, 0.1);
+    padding-left: 10px;
+    padding-top: 30px;
+}
+
+.home-header-divider {
+    @apply h-0.5 bg-cambridge/25 rounded-full;
+    width: calc(100% - 50px);
+    margin: 0 auto;
+}

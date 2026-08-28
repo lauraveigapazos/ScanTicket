@@ -16,28 +16,6 @@
 
 @layer components {
 
-    /* ===== HOME HEADER ===== */
-    .home-header {
-        @apply sticky top-0 z-10 bg-smoke px-5 py-4;
-    }
-
-    .home-header-content {
-        @apply flex items-start justify-between mb-2;
-    }
-
-    .home-header-title {
-        @apply text-3xl font-bold font-heading text-slate-gray;
-        text-shadow: 0 2px 4px rgba(50, 67, 61, 0.1);
-        padding-left: 10px;
-        padding-top: 30px;
-    }
-
-    .home-header-divider {
-        @apply h-0.5 bg-cambridge/25 rounded-full;
-        width: calc(100% - 10px);
-        margin: 0 auto;
-    }
-
     /* ===== BUTTONS ===== */
     .btn-primary {
         @apply bg-myrtle text-white px-6 py-3 rounded-lg font-heading font-semibold

@@ -19,6 +19,14 @@ export const getReceipt = (receiptId, onSuccess, onErrors) =>
         onErrors
     );
 
+export const getReceiptImage = (receiptId, onSuccess, onErrors) =>
+    appFetch(
+        `/receipts/${receiptId}/image`,
+        fetchConfig("GET"),
+        onSuccess,
+        onErrors
+    );
+
 export const getUserReceipts = (onSuccess, onErrors) =>
     appFetch(
         "/receipts",

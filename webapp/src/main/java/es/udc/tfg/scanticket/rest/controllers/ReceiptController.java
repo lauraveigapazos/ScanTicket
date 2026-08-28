@@ -14,13 +14,19 @@ import es.udc.tfg.scanticket.rest.dtos.ReceiptDto;
 import es.udc.tfg.scanticket.rest.dtos.ReceiptItemConversor;
 import es.udc.tfg.scanticket.rest.dtos.ReceiptItemDto;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Locale;
 
@@ -101,6 +107,35 @@ public class ReceiptController {
         List<Receipt> receipts = receiptService.findReceiptsByUser(userId);
         List<ReceiptDto> receiptDtos = ReceiptConversor.toReceiptDtos(receipts);
         return ResponseEntity.ok(receiptDtos);
+    }
+
+    @GetMapping("/{receiptId}/image")
+    public ResponseEntity<Resource> getReceiptImage(@RequestAttribute Long userId, @PathVariable Long receiptId) throws InstanceNotFoundException, IOException {
+
+        System.out.println("getReceiptImage called - userId: " + userId + ", receiptId: " + receiptId);
+
+        Receipt receipt = receiptService.findReceipt(userId, receiptId);
+
+        System.out.println("Receipt found: " + receipt);
+        System.out.println("Image path: " + (receipt != null ? receipt.getImagePath() : "null"));
+
+        if (receipt == null || receipt.getImagePath() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        File file = new File(receipt.getImagePath());
+        System.out.println("File exists: " + file.exists() + " at path: " + file.getAbsolutePath());
+
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = new FileSystemResource(file);
+        String contentType = Files.probeContentType(file.toPath());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType != null ? contentType : "image/jpeg"))
+                .body(resource);
     }
 
     @PutMapping("/{receiptId}")

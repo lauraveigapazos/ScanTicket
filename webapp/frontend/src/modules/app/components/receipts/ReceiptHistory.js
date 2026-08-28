@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate, useOutletContext} from 'react-router-dom';
 import { getUserReceipts } from '../../../../backend/receiptService';
 import ReceiptCard from './/ReceiptCard';
 import '../../../../styles/history.css';
 import '../../../../styles/receipts.css';
+import Header from "../ui/Header";
 
 const History = () => {
     const navigate = useNavigate();
 
+    const context = useOutletContext() || {};
+    const { sidebarOpen, setSidebarOpen } = context;
     const [receipts, setReceipts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,35 +68,10 @@ const History = () => {
     return (
         <div className="min-h-screen bg-smoke pb-20">
 
-            <header className="page-header">
-                <div className="page-header-content">
-                    <h1 className="page-header-title">
-                        Historial
-                    </h1>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate('/receipts/upload')}
-                        className="history-add-button"
-                        aria-label="Subir recibo"
-                        title="Subir recibo"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M12 5v14" />
-                            <path d="M5 12h14" />
-                        </svg>
-                    </button>
-                </div>
-            </header>
+            <Header
+                onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+                title="Historial"
+            />
 
             <main className="px-5 py-6">
 
@@ -115,7 +93,7 @@ const History = () => {
 
                 {loading && (
                     <div className="flex justify-center py-16">
-                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-cambridge border-t-myrtle" />
+                        <div className="animate-spin rounded-full h-8 w-8 border-4 border-cambridge border-t-myrtle"/>
                     </div>
                 )}
 

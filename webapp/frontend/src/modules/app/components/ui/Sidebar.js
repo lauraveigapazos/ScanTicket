@@ -2,10 +2,9 @@ import {useEffect, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {logout, tryLoginFromServiceToken} from '../../../../backend/userService';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, setIsOpen }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [isOpen, setIsOpen] = useState(false);
     const [profile, setProfile] = useState(null);
 
     //load user profile
