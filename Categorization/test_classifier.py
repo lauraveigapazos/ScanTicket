@@ -27,10 +27,26 @@ products = [
 
 
 for product in products:
+
     result = categorizer.categorize(product)
 
+    print()
+    print("=" * 70)
+    print(product)
+    print()
+
     print(
-        f"{product:30} -> "
-        f"{result['category']:25} "
-        f"similarity={result['similarity']:.3f}"
+        f"1. {result['category']:25} "
+        f"{result['score']:.3f} "
+        f"({result['matched_example']})"
     )
+
+    for position, alternative in enumerate(
+        result["alternatives"],
+        start=2
+    ):
+        print(
+            f"{position}. {alternative['category']:25} "
+            f"{alternative['score']:.3f} "
+            f"({alternative['matched_example']})"
+        )
