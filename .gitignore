@@ -27,3 +27,7 @@ __pycache__/
 
 # Node
 node_modules/
+
+# Frontend generated files
+webapp/frontend/build/
+webapp/frontend/coverage/
