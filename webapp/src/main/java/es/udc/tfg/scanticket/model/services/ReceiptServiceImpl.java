@@ -113,7 +113,7 @@ public class ReceiptServiceImpl implements ReceiptService{
         receipt.setStore((String) ocrData.get("store"));
         receipt.setStoreCif((String) ocrData.get("store_cif"));
         receipt.setAddress((String) ocrData.get("address"));
-        receipt.setPhoneNumber((String) ocrData.get("phone_number"));
+        receipt.setPhoneNumber((String) ocrData.get("phone"));
         receipt.setPaymentMethod((String) ocrData.get("payment_method"));
 
         String dateStr = (String) ocrData.get("date");
@@ -131,7 +131,7 @@ public class ReceiptServiceImpl implements ReceiptService{
             receipt.setSubtotal(BigDecimal.valueOf(((Number) subtotalObj).doubleValue()));
         }
 
-        Object taxObj = ocrData.get("tax_amount");
+        Object taxObj = ocrData.get("tax");
         if (taxObj != null) {
             receipt.setTaxAmount(BigDecimal.valueOf(((Number) taxObj).doubleValue()));
         }

@@ -45,7 +45,10 @@ public class OcrServiceImpl implements OcrService {
 
             int exitCode = process.exitValue();
             if (exitCode != 0){
-                throw new RuntimeException("OCR process failed with exit code: " + exitCode);
+                throw new RuntimeException(
+                        "OCR process failed with exit code: " + exitCode +
+                                "\nPython output:\n" + output
+                );
             }
 
             return parseOcrOutput(output);
