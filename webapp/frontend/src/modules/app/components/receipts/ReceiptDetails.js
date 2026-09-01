@@ -113,9 +113,7 @@ const ReceiptDetails = () => {
         navigate(-1);
     };
 
-    /* =========================
-       Loading
-       ========================= */
+    /* loading */
 
     if (loading) {
         return (
@@ -157,10 +155,7 @@ const ReceiptDetails = () => {
         );
     }
 
-    /* =========================
-       Error
-       ========================= */
-
+    /* error */
     if (error || !receipt) {
         return (
             <div className="min-h-screen bg-smoke">
@@ -216,10 +211,7 @@ const ReceiptDetails = () => {
     return (
         <div className="min-h-screen bg-smoke pb-20">
 
-            {/* =========================
-                Header
-                ========================= */}
-
+            {/* header */}
             <header className="page-header">
                 <div className="page-header-content">
                     <button
@@ -252,10 +244,7 @@ const ReceiptDetails = () => {
 
             <main className="px-5 py-6 space-y-5">
 
-                {/* =========================
-                    Receipt summary
-                    ========================= */}
-
+                {/* summary */}
                 <section className="receipt-detail-hero">
 
                     <div className="receipt-detail-icon">
@@ -295,10 +284,7 @@ const ReceiptDetails = () => {
                     </div>
                 </section>
 
-                {/* =========================
-                    Store information
-                    ========================= */}
-
+                {/* store info */}
                 {(receipt.address ||
                     receipt.phoneNumber ||
                     receipt.storeCif) && (
@@ -334,10 +320,7 @@ const ReceiptDetails = () => {
                     </section>
                 )}
 
-                {/* =========================
-                    Products
-                    ========================= */}
-
+                {/* products */}
                 <section className="card p-0 overflow-hidden">
 
                     <div className="px-5 py-4 border-b border-timberwolf">
@@ -403,15 +386,19 @@ const ReceiptDetails = () => {
                                                 item.tax) && (
                                                 <div className="flex flex-wrap gap-2 mt-2">
 
-                                                    {item.category && (
+                                                    {item.userCategory ? (
+                                                        <span className="badge badge-primary">
+                                                            {item.userCategory}
+                                                        </span>
+                                                    ) : item.category ? (
                                                         <span className="badge badge-primary">
                                                             {item.category}
                                                         </span>
-                                                    )}
+                                                    ) : null}
 
-                                                    {item.userCategory && (
+                                                    {item.userCategory && item.category && (
                                                         <span className="badge-category">
-                                                            {item.userCategory}
+                                                            {item.category}
                                                         </span>
                                                     )}
 
@@ -438,10 +425,7 @@ const ReceiptDetails = () => {
                     )}
                 </section>
 
-                {/* =========================
-                    Payment / totals
-                    ========================= */}
-
+                {/* payment details */}
                 <section className="card">
 
                     <h2 className="form-section-title mb-4">
