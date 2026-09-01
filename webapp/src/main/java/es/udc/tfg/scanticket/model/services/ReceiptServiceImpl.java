@@ -202,7 +202,7 @@ public class ReceiptServiceImpl implements ReceiptService{
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Item not found"));
 
-        //item.setUserCategory(userCategory);
+        item.setUserCategory(userCategory);
         receiptDao.save(receipt);
 
         return item;
