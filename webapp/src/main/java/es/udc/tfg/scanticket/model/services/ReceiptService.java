@@ -9,7 +9,9 @@ import es.udc.tfg.scanticket.model.services.exceptions.ReceiptProcessingExceptio
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +27,9 @@ public interface ReceiptService {
 
     List<Receipt> findReceiptsByUser(Long userId);
 
-    ReceiptItem updateReceiptItem(Long userId, Long receiptId, Long itemId, String userCategory);
-
+    void updateReceipt(Long userId, Long receiptId, String store, String storeCif, LocalDate date, LocalTime time,
+                       String address, String phoneNumber, BigDecimal subtotal, BigDecimal taxAmount, BigDecimal total,
+                       String paymentMethod, List<ReceiptItem> items) throws InstanceNotFoundException;
     void deleteReceipt(Long userId, Long receiptId);
 
     List<Receipt> findReceiptsByDateRange(Long userId, LocalDate startDate, LocalDate endDate);

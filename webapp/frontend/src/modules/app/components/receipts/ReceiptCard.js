@@ -45,6 +45,11 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
         navigate(`/receipts/${receipt.id}`);
     };
 
+    const handleEditClick = (event) => {
+        event.stopPropagation();
+        navigate(`/receipts/${receipt.id}/edit`);
+    };
+
     const handleDeleteClick = (event) => {
         event.stopPropagation();
         setShowConfirmation(true);
@@ -105,9 +110,9 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         >
-                            <circle cx="9" cy="21" r="1"/>
-                            <circle cx="20" cy="21" r="1"/>
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            <circle cx="9" cy="21" r="1" />
+                            <circle cx="20" cy="21" r="1" />
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                         </svg>
                     </div>
 
@@ -123,27 +128,51 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
                 </div>
 
                 <div className="receipt-card-actions">
-                    <button
-                        type="button"
-                        className="receipt-card-delete"
-                        onClick={handleDeleteClick}
-                        aria-label="Eliminar recibo"
-                        title="Eliminar recibo"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                    <div className="receipt-card-top-actions">
+                        <button
+                            type="button"
+                            className="receipt-card-edit"
+                            onClick={handleEditClick}
+                            aria-label="Editar recibo"
+                            title="Editar recibo"
                         >
-                            <line x1="18" y1="6" x2="6" y2="18"/>
-                            <line x1="6" y1="6" x2="18" y2="18"/>
-                        </svg>
-                    </button>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M12 20h9" />
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                            </svg>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="receipt-card-delete"
+                            onClick={handleDeleteClick}
+                            aria-label="Eliminar recibo"
+                            title="Eliminar recibo"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-4 w-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
 
                     <div className="receipt-card-bottom-right">
                         <p className="receipt-card-amount">
@@ -151,24 +180,23 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
                         </p>
 
                         <span className="receipt-card-arrow">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <polyline points="9 18 15 12 9 6"/>
-                </svg>
-            </span>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        >
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </span>
                     </div>
                 </div>
             </div>
 
-            {/* popup */}
             {showConfirmation && (
                 <div
                     className="receipt-modal-backdrop"
@@ -192,11 +220,11 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                             >
-                                <polyline points="3 6 5 6 21 6"/>
-                                <path d="M19 6l-1 14H6L4 6"/>
-                                <path d="M10 11v6"/>
-                                <path d="M14 11v6"/>
-                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6l-1 14H6L4 6" />
+                                <path d="M10 11v6" />
+                                <path d="M14 11v6" />
+                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
                             </svg>
                         </div>
 
@@ -238,7 +266,7 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
                                 disabled={deleting}
                             >
                                 {deleting && (
-                                    <span className="receipt-delete-spinner"/>
+                                    <span className="receipt-delete-spinner" />
                                 )}
 
                                 {deleting ? 'Eliminando...' : 'Eliminar'}

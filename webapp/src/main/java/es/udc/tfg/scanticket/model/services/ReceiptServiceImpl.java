@@ -192,21 +192,45 @@ public class ReceiptServiceImpl implements ReceiptService{
     }
 
     @Override
-    public ReceiptItem updateReceiptItem(Long userId, Long receiptId, Long itemId, String userCategory) {
+    @Transactional(rollbackFor = InstanceNotFoundException.class)
+    public void updateReceipt(Long userId, Long receiptId, String store, String storeCif, LocalDate date, LocalTime time,
+                       String address, String phoneNumber, BigDecimal subtotal, BigDecimal taxAmount, BigDecimal total,
+                       String paymentMethod, List<ReceiptItem> items) throws InstanceNotFoundException{
 
         Receipt receipt = receiptDao.findByIdAndUserId(receiptId, userId)
-                .orElseThrow(() -> new RuntimeException("Receipt not found or access denied"));
+                .orElseThrow(() -> new InstanceNotFoundException("project.entities.receipt", receiptId));
 
-        ReceiptItem item = receipt.getItems().stream()
-                .filter(i -> i.getId().equals(itemId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+        receipt.setStore(store);
+        receipt.setStoreCif(storeCif);
+        receipt.setDate(date);
+        receipt.setTime(time);
+        receipt.setAddress(address);
+        receipt.setPhoneNumber(phoneNumber);
+        receipt.setSubtotal(subtotal);
+        receipt.setTaxAmount(taxAmount);
+        receipt.setTotal(total);
+        receipt.setPaymentMethod(paymentMethod);
 
-        item.setUserCategory(userCategory);
+        if (items != null){
+            for (ReceiptItem itemUpdate : items){
+                ReceiptItem item = receipt.getItems().stream()
+                        .filter(i -> i.getId().equals(itemUpdate.getId()))
+                        .findFirst()
+                        .orElseThrow(() -> new InstanceNotFoundException("project.entities.receiptItem", itemUpdate.getId()));
+
+                item.setName(itemUpdate.getName());
+                item.setQuantity(itemUpdate.getQuantity());
+                item.setUnit(itemUpdate.getUnit());
+                item.setUnitPrice(itemUpdate.getUnitPrice());
+                item.setTotalPrice(itemUpdate.getTotalPrice());
+                item.setCategory(itemUpdate.getCategory());
+                item.setTax(itemUpdate.getTax());
+                item.setUserCategory(itemUpdate.getUserCategory());
+            }
+        }
         receiptDao.save(receipt);
-
-        return item;
     }
+
 
     @Override
     public void deleteReceipt(Long userId, Long receiptId) {
