@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "ReceiptItems")
 public class ReceiptItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Receipt receipt;

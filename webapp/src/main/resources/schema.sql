@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS UserCategories;
 DROP TABLE IF EXISTS ReceiptItems;
 DROP TABLE IF EXISTS Receipts;
 DROP TABLE IF EXISTS Users;
@@ -56,5 +57,18 @@ CREATE TABLE ReceiptItems (
         REFERENCES Receipts(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
+);
+
+CREATE TABLE UserCategories (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    userId BIGINT NOT NULL,
+    productName VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_user_categories PRIMARY KEY (id),
+    CONSTRAINT fk_user2 FOREIGN KEY (userId)
+        REFERENCES Users(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT uq_user_category UNIQUE (userId, productName)
 );
 
