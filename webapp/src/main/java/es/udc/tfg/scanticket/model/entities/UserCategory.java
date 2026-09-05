@@ -14,8 +14,7 @@ public class UserCategory {
     public UserCategory() {
     }
 
-    public UserCategory(Long id, User user, String productName, String category) {
-        this.id = id;
+    public UserCategory(User user, String productName, String category) {
         this.user = user;
         this.productName = productName;
         this.category = category;
