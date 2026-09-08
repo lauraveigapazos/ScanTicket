@@ -62,63 +62,6 @@ exports[`Home renders correctly 1`] = `
     className="px-5 py-6 space-y-6 pb-20 mt-16 md:mt-0"
   >
     <div
-      className="card"
-    >
-      <h2
-        className="text-lg font-semibold text-slate-gray mb-4"
-      >
-        Añadir nuevo recibo
-      </h2>
-      <div
-        className="w-full"
-      >
-        <label
-          className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-cambridge rounded-lg cursor-pointer hover:bg-smoke transition-colors duration-200"
-        >
-          <div
-            className="flex flex-col items-center justify-center"
-          >
-            <svg
-              className="h-12 w-12 text-cambridge mb-3"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
-              />
-              <circle
-                cx="12"
-                cy="13"
-                r="4"
-              />
-            </svg>
-            <p
-              className="text-sm font-semibold text-slate-gray mb-1"
-            >
-              Toca para cargar foto del recibo
-            </p>
-            <p
-              className="text-xs text-cambridge font-sans"
-            >
-              PNG, JPG, GIF hasta 5MB
-            </p>
-          </div>
-          <input
-            accept="image/*"
-            className="hidden"
-            disabled={false}
-            onChange={[Function]}
-            type="file"
-          />
-        </label>
-      </div>
-    </div>
-    <div
       className="text-center py-12"
     >
       <div

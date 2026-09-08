@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 import {logout, tryLoginFromServiceToken} from '../../../backend/userService';
 import { getUserReceipts, getReceiptImage } from '../../../backend/receiptService';
-import ReceiptUpload from '../components/receipts/ReceiptUpload';
+import ReceiptUploadCard from './receipts/ReceiptUploadCard';
 import ReceiptCard from '../components/receipts/ReceiptCard';
 import StatisticCard from '../components/statistics/StatisticCard';
 import '../../../styles/profile.css';
@@ -112,17 +112,21 @@ const Home = () => {
             />
 
             <div className="px-5 py-6 space-y-6 pb-20 mt-16 md:mt-0">
-                {/* upload */}
-                <div className="card">
-                    <h2 className="text-lg font-semibold text-slate-gray mb-4">
-                        Añadir nuevo recibo
-                    </h2>
-                    <ReceiptUpload onUploadSuccess={handleUploadSuccess}/>
-                </div>
 
                 {error && (
                     <div className="p-4 rounded-lg bg-melon/10 border border-melon/30 text-sm text-melon font-sans">
                         {error}
+                    </div>
+                )}
+
+
+                {/* upload - only shown if there's no previous data */}
+                {!loading && receipts.length === 0 && (
+                    <div className="card">
+                        <h2 className="text-lg font-semibold text-slate-gray mb-4">
+                            Añadir nuevo recibo
+                        </h2>
+                        <ReceiptUploadCard onUploadSuccess={handleUploadSuccess}/>
                     </div>
                 )}
 

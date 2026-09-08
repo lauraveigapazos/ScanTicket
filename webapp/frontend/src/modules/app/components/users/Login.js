@@ -101,7 +101,7 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="text-right">
+                        <div className="text-center">
                             <Link
                                 to="/users/forgotPassword"
                                 className="text-sm text-cambridge hover:text-myrtle transition-colors"
