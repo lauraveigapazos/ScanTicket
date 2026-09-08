@@ -34,6 +34,7 @@ public class StatisticsServiceImpl implements StatisticsService{
         int receiptCount = getReceiptCount(userId, startDate, endDate);
         BigDecimal averageSpendingPerDay = getAverageSpendingPerDay(userId, startDate, endDate);
         Map<LocalDate, BigDecimal> dailySpending = getDailySpending(userId, startDate, endDate);
+        Map<String, BigDecimal> spendingByCategory = getSpendingByCategory(userId, startDate, endDate);
         YearMonth period = YearMonth.from(startDate);
 
         Map<String, Object> result = new HashMap<>();
@@ -41,6 +42,7 @@ public class StatisticsServiceImpl implements StatisticsService{
         result.put("receiptCount", receiptCount);
         result.put("averageSpendingPerDay", averageSpendingPerDay);
         result.put("dailySpending", dailySpending);
+        result.put("spendingByCategory", spendingByCategory);
         result.put("period", period);
 
         return result;
@@ -105,5 +107,40 @@ public class StatisticsServiceImpl implements StatisticsService{
         });
 
         return dailyTotals;
+    }
+
+    @Override
+    public Map<String, BigDecimal> getSpendingByCategory(Long userId, LocalDate startDate, LocalDate endDate) {
+
+        List<Receipt> receipts = receiptDao.findByUserIdAndDateBetween(userId, startDate, endDate);
+        Map<String, BigDecimal> categorySpending = new TreeMap<>();
+
+        receipts.forEach(receipt -> {
+            receipt.getItems().forEach(item -> {
+                //priority: usercategory > category
+                String categoryToUse = (item.getUserCategory() != null && !item.getUserCategory().isBlank())
+                        ? item.getUserCategory()
+                        : item.getCategory();
+
+                //fallback
+                if (categoryToUse == null || categoryToUse.isBlank()) {
+                    categoryToUse = "Uncategorized";
+                }
+
+                BigDecimal currentTotal = categorySpending.getOrDefault(categoryToUse, BigDecimal.ZERO);
+                categorySpending.put(categoryToUse, currentTotal.add(item.getTotalPrice()));
+            });
+        });
+
+        //sort by spending amount descending
+        return categorySpending.entrySet()
+                .stream()
+                .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                .collect(java.util.stream.Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 }

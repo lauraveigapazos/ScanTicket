@@ -23,6 +23,7 @@ public class StatisticsConversor  {
         statisticsDto.setReceiptCount((Integer) statistics.get("receiptCount"));
         statisticsDto.setAverageSpendingPerDay((BigDecimal) statistics.get("averageSpendingPerDay"));
         statisticsDto.setDailySpending(convertDailySpending((Map<LocalDate, BigDecimal>) statistics.get("dailySpending")));
+        statisticsDto.setSpendingByCategory(convertSpendingByCategory((Map<String, BigDecimal>) statistics.get("spendingByCategory")));
 
         return statisticsDto;
     }
@@ -39,4 +40,14 @@ public class StatisticsConversor  {
         return result;
     }
 
+    private static List<CategorySpendingDto> convertSpendingByCategory(Map<String, BigDecimal> spendingByCategory) {
+        if (spendingByCategory == null || spendingByCategory.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return spendingByCategory.entrySet()
+                .stream()
+                .map(entry -> new CategorySpendingDto(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
 }

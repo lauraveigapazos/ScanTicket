@@ -11,4 +11,5 @@ public interface StatisticsService {
     int getReceiptCount(Long userId, LocalDate startDate, LocalDate endDate);
     BigDecimal getAverageSpendingPerDay(Long userId, LocalDate startDate, LocalDate endDate);
     Map<LocalDate, BigDecimal> getDailySpending(Long userId, LocalDate startDate, LocalDate endDate);
+    Map<String, BigDecimal> getSpendingByCategory (Long userId, LocalDate startDate, LocalDate endDate);
 }

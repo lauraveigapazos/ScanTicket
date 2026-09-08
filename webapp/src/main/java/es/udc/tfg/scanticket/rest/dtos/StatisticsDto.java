@@ -11,16 +11,20 @@ public class StatisticsDto {
     private int receiptCount;
     private BigDecimal averageSpendingPerDay;
     private List<DailySpendingDto> dailySpending;
+    private List<CategorySpendingDto> spendingByCategory;
 
     public StatisticsDto() {
     }
 
-    public StatisticsDto(YearMonth period, BigDecimal totalSpent, int receiptCount, BigDecimal averageSpendingPerDay, List<DailySpendingDto> dailySpending) {
+    public StatisticsDto(YearMonth period,
+                         BigDecimal totalSpent, int receiptCount, BigDecimal averageSpendingPerDay,
+                         List<DailySpendingDto> dailySpending, List<CategorySpendingDto> spendingByCategory) {
         this.period = period;
         this.totalSpent = totalSpent;
         this.receiptCount = receiptCount;
         this.averageSpendingPerDay = averageSpendingPerDay;
         this.dailySpending = dailySpending;
+        this.spendingByCategory = spendingByCategory;
     }
 
     public YearMonth getPeriod() {
@@ -61,5 +65,13 @@ public class StatisticsDto {
 
     public void setDailySpending(List<DailySpendingDto> dailySpending) {
         this.dailySpending = dailySpending;
+    }
+
+    public List<CategorySpendingDto> getSpendingByCategory() {
+        return spendingByCategory;
+    }
+
+    public void setSpendingByCategory(List<CategorySpendingDto> spendingByCategory) {
+        this.spendingByCategory = spendingByCategory;
     }
 }
