@@ -1,10 +1,7 @@
 package es.udc.tfg.scanticket.model.services;
 
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Receipt;
-import es.udc.tfg.scanticket.model.entities.ReceiptDao;
-import es.udc.tfg.scanticket.model.entities.ReceiptItem;
-import es.udc.tfg.scanticket.model.entities.User;
+import es.udc.tfg.scanticket.model.entities.*;
 import es.udc.tfg.scanticket.model.services.exceptions.InvalidImageException;
 import es.udc.tfg.scanticket.model.services.exceptions.ReceiptProcessingException;
 import lombok.extern.slf4j.Slf4j;
@@ -48,13 +45,16 @@ public class ReceiptServiceTest {
     @MockBean
     private UserService userService;
 
+    @MockBean
+    private UserCategoryService userCategoryService;
+
     private User testUser;
     private Receipt testReceipt;
 
     @Before
     public void setUp(){
 
-        receiptService = new ReceiptServiceImpl(receiptDao, ocrService, userService);
+        receiptService = new ReceiptServiceImpl(receiptDao, ocrService, userService, userCategoryService);
 
         testUser = new User("testUser", "password", "Test", "User", "test@test.com");
         testUser.setId(1L);
@@ -123,6 +123,53 @@ public class ReceiptServiceTest {
         assertEquals(0, item.getTotalPrice().compareTo(BigDecimal.valueOf(1.0)));
         assertEquals("drogueria", item.getCategory());
         assertEquals("21%", item.getTax());
+    }
+
+    @Test
+    public void testMapOcrDataToReceipt_WithRememberedUserCategory() {
+
+        Map<String, Object> ocrData = createMockOcrData();
+
+        UserCategory userCategory = new UserCategory(testUser, "Pila Froiz", "Hogar");
+
+        when(userCategoryService.findByUserIdAndProductName(1L, "Pila Froiz"))
+                .thenReturn(userCategory);
+
+        Receipt receipt = receiptService.mapOcrDataToReceipt(testUser, ocrData);
+
+        assertNotNull(receipt);
+        assertEquals(1, receipt.getItems().size());
+
+        ReceiptItem item = receipt.getItems().get(0);
+
+        assertEquals("Pila Froiz", item.getName());
+        assertEquals("drogueria", item.getCategory());
+        assertEquals("Hogar", item.getUserCategory());
+
+        verify(userCategoryService, times(1))
+                .findByUserIdAndProductName(1L, "Pila Froiz");
+    }
+
+    @Test
+    public void testMapOcrDataToReceipt_WithoutRememberedUserCategory() {
+
+        Map<String, Object> ocrData = createMockOcrData();
+
+        when(userCategoryService.findByUserIdAndProductName(1L, "Pila Froiz"))
+                .thenReturn(null);
+
+        Receipt receipt = receiptService.mapOcrDataToReceipt(testUser, ocrData);
+
+        assertNotNull(receipt);
+        assertEquals(1, receipt.getItems().size());
+
+        ReceiptItem item = receipt.getItems().get(0);
+
+        assertEquals("Pila Froiz", item.getName());
+        assertEquals("drogueria", item.getCategory());
+        assertNull(item.getUserCategory());
+
+        verify(userCategoryService, times(1)).findByUserIdAndProductName(1L, "Pila Froiz");
     }
 
     @Test(expected = InvalidImageException.class)
@@ -207,6 +254,7 @@ public class ReceiptServiceTest {
         itemUpdate.setUnitPrice(BigDecimal.valueOf(3.50));
         itemUpdate.setTotalPrice(BigDecimal.valueOf(7.00));
         itemUpdate.setCategory("Alimentación");
+        itemUpdate.setUserCategory("Comida");
         itemUpdate.setTax("10%");
 
         receiptService.updateReceipt(1L, 1L, "Updated Store", "B12345678",
@@ -234,9 +282,45 @@ public class ReceiptServiceTest {
         assertEquals(BigDecimal.valueOf(3.50), item.getUnitPrice());
         assertEquals(BigDecimal.valueOf(7.00), item.getTotalPrice());
         assertEquals("Alimentación", item.getCategory());
+        assertEquals("Comida", item.getUserCategory());
         assertEquals("10%", item.getTax());
 
         verify(receiptDao).save(testReceipt);
+        verify(userCategoryService, times(1)).saveCategory(1L, "Updated Product", "Comida");
+    }
+
+    @Test
+    public void testUpdateReceipt_DoesNotSaveUserCategory() throws InstanceNotFoundException{
+
+        ReceiptItem item = new ReceiptItem();
+        item.setId(1L);
+        item.setName("Old Product");
+
+        testReceipt.setItems(new ArrayList<>());
+        testReceipt.getItems().add(item);
+
+        when(receiptDao.findByIdAndUserId(1L, 1L))
+                .thenReturn(Optional.of(testReceipt));
+
+        ReceiptItem itemUpdate = new ReceiptItem();
+        itemUpdate.setId(1L);
+        itemUpdate.setName("Updated Product");
+        itemUpdate.setQuantity(BigDecimal.ONE);
+        itemUpdate.setUnit("unit");
+        itemUpdate.setUnitPrice(BigDecimal.valueOf(2.50));
+        itemUpdate.setTotalPrice(BigDecimal.valueOf(2.50));
+        itemUpdate.setCategory("Alimentación");
+        itemUpdate.setTax("21%");
+        itemUpdate.setUserCategory(null);
+
+        receiptService.updateReceipt(1L, 1L, "Updated Store", "B12345678",
+                LocalDate.of(2025, 8, 1), LocalTime.of(10, 30),
+                "Updated Address", "600123456",
+                BigDecimal.valueOf(20.00), BigDecimal.valueOf(2.00), BigDecimal.valueOf(22.00),
+                "CARD", List.of(itemUpdate));
+
+        assertNull(item.getUserCategory());
+        verify(userCategoryService, never()).saveCategory(anyLong(), anyString(), anyString());
     }
 
     @Test(expected = InstanceNotFoundException.class)

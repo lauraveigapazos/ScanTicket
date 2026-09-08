@@ -20,6 +20,7 @@ public class ReceiptItemConversor {
         receiptItem.setUnitPrice(receiptItemDto.getUnitPrice());
         receiptItem.setTotalPrice(receiptItemDto.getTotalPrice());
         receiptItem.setCategory(receiptItemDto.getCategory());
+        receiptItem.setUserCategory(receiptItemDto.getUserCategory());
         receiptItem.setTax(receiptItemDto.getTax());
 
         return receiptItem;
@@ -44,7 +45,7 @@ public class ReceiptItemConversor {
         receiptItemDto.setUnitPrice(receiptItem.getUnitPrice());
         receiptItemDto.setTotalPrice(receiptItem.getTotalPrice());
         receiptItemDto.setCategory(receiptItem.getCategory());
-        //receiptItemDto.setUserCategory(receiptItem.);
+        receiptItemDto.setUserCategory(receiptItem.getUserCategory());
         receiptItemDto.setTax(receiptItem.getTax());
 
         return receiptItemDto;

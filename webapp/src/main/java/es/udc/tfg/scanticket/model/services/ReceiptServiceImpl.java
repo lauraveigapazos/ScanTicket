@@ -1,10 +1,7 @@
 package es.udc.tfg.scanticket.model.services;
 
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
-import es.udc.tfg.scanticket.model.entities.Receipt;
-import es.udc.tfg.scanticket.model.entities.ReceiptDao;
-import es.udc.tfg.scanticket.model.entities.ReceiptItem;
-import es.udc.tfg.scanticket.model.entities.User;
+import es.udc.tfg.scanticket.model.entities.*;
 import es.udc.tfg.scanticket.model.services.exceptions.InvalidImageException;
 import es.udc.tfg.scanticket.model.services.exceptions.ReceiptProcessingException;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +30,17 @@ public class ReceiptServiceImpl implements ReceiptService{
     private final ReceiptDao receiptDao;
     private final OcrService ocrService;
     private final UserService userService;
+    private final UserCategoryService userCategoryService;
 
     @Value("${app.upload.dir:uploads/receipts}")
     private String uploadDir;
 
-    public ReceiptServiceImpl(ReceiptDao receiptDao, OcrService ocrService, UserService userService){
+    public ReceiptServiceImpl(ReceiptDao receiptDao, OcrService ocrService,
+                              UserService userService, UserCategoryService userCategoryService){
         this.receiptDao = receiptDao;
         this.ocrService = ocrService;
         this.userService = userService;
+        this.userCategoryService = userCategoryService;
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ReceiptServiceImpl implements ReceiptService{
         receipt.setStore((String) ocrData.get("store"));
         receipt.setStoreCif((String) ocrData.get("store_cif"));
         receipt.setAddress((String) ocrData.get("address"));
-        receipt.setPhoneNumber((String) ocrData.get("phone_number"));
+        receipt.setPhoneNumber((String) ocrData.get("phone"));
         receipt.setPaymentMethod((String) ocrData.get("payment_method"));
 
         String dateStr = (String) ocrData.get("date");
@@ -131,7 +131,7 @@ public class ReceiptServiceImpl implements ReceiptService{
             receipt.setSubtotal(BigDecimal.valueOf(((Number) subtotalObj).doubleValue()));
         }
 
-        Object taxObj = ocrData.get("tax_amount");
+        Object taxObj = ocrData.get("tax");
         if (taxObj != null) {
             receipt.setTaxAmount(BigDecimal.valueOf(((Number) taxObj).doubleValue()));
         }
@@ -169,6 +169,23 @@ public class ReceiptServiceImpl implements ReceiptService{
                 }
 
                 item.setCategory((String) itemData.get("category"));
+
+                String productName = item.getName();
+
+                //find previously used categories for this item
+                if (productName != null && !productName.isBlank()) {
+
+                    UserCategory userCategory =
+                            userCategoryService.findByUserIdAndProductName(
+                                    user.getId(),
+                                    productName
+                            );
+
+                    if (userCategory != null) {
+                        item.setUserCategory(userCategory.getCategory());
+                    }
+                }
+
                 item.setTax((String) itemData.get("tax"));
 
                 receipt.getItems().add(item);
@@ -225,9 +242,17 @@ public class ReceiptServiceImpl implements ReceiptService{
                 item.setTotalPrice(itemUpdate.getTotalPrice());
                 item.setCategory(itemUpdate.getCategory());
                 item.setTax(itemUpdate.getTax());
+                item.setUserCategory(itemUpdate.getUserCategory());
+
+                //save user category
+                if (itemUpdate.getUserCategory() != null
+                        && !itemUpdate.getUserCategory().isBlank()
+                        && itemUpdate.getName() != null
+                        && !itemUpdate.getName().isBlank()){
+                    userCategoryService.saveCategory(userId, itemUpdate.getName(), itemUpdate.getUserCategory());
+                }
             }
         }
-
         receiptDao.save(receipt);
     }
 

@@ -24,3 +24,10 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Node
+node_modules/
+
+# Frontend generated files
+webapp/frontend/build/
+webapp/frontend/coverage/

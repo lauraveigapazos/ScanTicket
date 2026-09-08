@@ -443,20 +443,34 @@ const EditReceipt = () => {
 
                                         <div className="edit-receipt-field">
                                             <label className="edit-receipt-label">
-                                                Categoría
+                                                Categoría detectada
                                             </label>
 
                                             <input
                                                 type="text"
                                                 value={item.category || ''}
+                                                readOnly
+                                                className="edit-receipt-input bg-gray-100"
+                                            />
+                                        </div>
+
+                                        <div className="edit-receipt-field">
+                                            <label className="edit-receipt-label">
+                                                Mi categoría
+                                            </label>
+
+                                            <input
+                                                type="text"
+                                                value={item.userCategory || ''}
                                                 onChange={(event) =>
                                                     handleItemChange(
                                                         index,
-                                                        'category',
+                                                        'userCategory',
                                                         event.target.value
                                                     )
                                                 }
                                                 className="edit-receipt-input"
+                                                placeholder="Ej. Compra semanal"
                                             />
                                         </div>
 

@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "ReceiptItems")
 public class ReceiptItem {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Receipt receipt;
@@ -21,6 +19,7 @@ public class ReceiptItem {
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
     private String category;
+    private String userCategory;
     private String tax;
     private LocalDateTime createdAt;
 
@@ -103,6 +102,14 @@ public class ReceiptItem {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getUserCategory() {
+        return userCategory;
+    }
+
+    public void setUserCategory(String userCategory) {
+        this.userCategory = userCategory;
     }
 
     public String getTax() {

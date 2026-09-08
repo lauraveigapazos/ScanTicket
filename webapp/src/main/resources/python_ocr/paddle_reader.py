@@ -11,6 +11,8 @@ import json
 from pathlib import Path
 from paddleocr import PaddleOCR
 from parser_factory import parse_receipt_text, read_config
+from categorization.receipt_categorizer import categorize_receipt
+from categorization.classifier import ProductCategorizer
 
 PROJECT_DIR = Path(__file__).parent
 DEFAULT_LANGUAGE = 'es'
@@ -92,12 +94,18 @@ def main():
         #extract text
         extracted_text, ocr_details, processed_img = extract_text_from_image(str(image_path), language)
         
-        #parse receipt
+        # parse receipt
         config = read_config(config_path)
         receipt = parse_receipt_text(extracted_text, config=config)
-        
-        #json to stdout
+
+        # initialize categorizer
+        classifier = ProductCategorizer()
+
+        # categorize products
         result = receipt.to_dict()
+        result = categorize_receipt(receipt.to_dict(), classifier)
+
+        # json to stdout
         print(json.dumps(result, indent=2, ensure_ascii=False))
         sys.exit(0)
         
