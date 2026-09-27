@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getReceipt } from '../../../../backend/receiptService';
+import { categoryLabel } from '../../../../config/categories';
 
 const ReceiptDetails = () => {
     const { receiptId } = useParams();
@@ -388,17 +389,17 @@ const ReceiptDetails = () => {
 
                                                     {item.userCategory ? (
                                                         <span className="badge badge-primary">
-                                                            {item.userCategory}
+                                                            {categoryLabel(item.userCategory)}
                                                         </span>
                                                     ) : item.category ? (
                                                         <span className="badge badge-primary">
-                                                            {item.category}
+                                                            {categoryLabel(item.category)}
                                                         </span>
                                                     ) : null}
 
                                                     {item.userCategory && item.category && (
                                                         <span className="badge-category">
-                                                            {item.category}
+                                                            {categoryLabel(item.category)}
                                                         </span>
                                                     )}
 

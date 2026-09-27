@@ -3,13 +3,14 @@ import {useNavigate, useOutletContext} from 'react-router-dom';
 import {logout, tryLoginFromServiceToken} from '../../../backend/userService';
 import { getUserReceipts, getReceiptImage } from '../../../backend/receiptService';
 import ReceiptUploadCard from './receipts/ReceiptUploadCard';
-import ReceiptCard from '../components/receipts/ReceiptCard';
 import StatisticCard from '../components/statistics/StatisticCard';
 import '../../../styles/profile.css';
 import '../../../styles/receipts.css';
 import {getCurrentMonthStatistics} from "../../../backend/statisticsService";
 import DailySpendingChart from "./statistics/DailySpendingChart";
 import Header from "./ui/Header";
+
+const LATEST_RECEIPTS = 3;
 
 const Home = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const Home = () => {
     const [profile, setProfile] = useState(null);
     const [receiptImages, setReceiptImages] = useState({});
     const [selectedReceiptImage, setSelectedReceiptImage] = useState(null);
+    const latestReceipts = receipts.slice(0, LATEST_RECEIPTS); //backend returns newest first
 
     //load user profile
     useEffect(() => {
@@ -43,9 +45,9 @@ const Home = () => {
         loadStatistics();
     }, []);
 
-    //load receipt images
+    //load images of the receipts shown
     useEffect(() => {
-        receipts.forEach((receipt) => {
+        latestReceipts.forEach((receipt) => {
             if (receipt.imagePath && !receiptImages[receipt.id]) {
                 getReceiptImage(
                     receipt.id,
@@ -132,27 +134,22 @@ const Home = () => {
 
                 {/* stats */}
                 {!loading && receipts.length > 0 && statistics && (
-                    <div className="space-y-3">
-                        <h3 className="text-sm font-semibold text-slate-gray uppercase tracking-wide">
-                            Estadísticas
-                        </h3>
-                        <div className="statistics-cards-grid">
-                            <StatisticCard
-                                icon={StatisticCard.WalletIcon}
-                                label="Total gastado"
-                                value={formatCurrency(statistics.totalSpent)}
-                            />
-                            <StatisticCard
-                                icon={StatisticCard.ReceiptIcon}
-                                label="Nº de tickets"
-                                value={statistics.receiptCount}
-                            />
-                            <StatisticCard
-                                icon={StatisticCard.TrendIcon}
-                                label="Gasto por día (media)"
-                                value={formatCurrency(statistics.averageSpendingPerDay)}
-                            />
-                        </div>
+                    <div className="statistics-cards-grid">
+                        <StatisticCard
+                            icon={StatisticCard.WalletIcon}
+                            label="Total gastado"
+                            value={formatCurrency(statistics.totalSpent)}
+                        />
+                        <StatisticCard
+                            icon={StatisticCard.ReceiptIcon}
+                            label="Nº de tickets"
+                            value={statistics.receiptCount}
+                        />
+                        <StatisticCard
+                            icon={StatisticCard.TrendIcon}
+                            label="Gasto por día (media)"
+                            value={formatCurrency(statistics.averageSpendingPerDay)}
+                        />
                     </div>
                 )}
 
@@ -163,8 +160,8 @@ const Home = () => {
                             <h3 className="text-xs font-semibold text-slate-gray/60 uppercase tracking-widest mb-4 font-heading">
                                 Últimos recibos
                             </h3>
-                            <div className="space-y-3">
-                                {receipts.map((receipt) => (
+                            <div className="flex-1 flex flex-col justify-between gap-3">
+                                {latestReceipts.map((receipt) => (
                                     <div key={receipt.id}
                                          className="flex items-center justify-between pb-3 border-b border-timberwolf/30 last:border-b-0 last:pb-0">
                                         <div className="flex items-center gap-3 min-w-0">

@@ -70,9 +70,9 @@ const ReceiptCard = ({ receipt, onDeleted }) => {
                     onDeleted(receipt.id);
                 }
             },
-            (error) => {
+            () => {
                 setDeleting(false);
-                setError(error);
+                setError('No se pudo eliminar el recibo');
             }
         );
     };

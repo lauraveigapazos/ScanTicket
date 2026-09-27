@@ -7,6 +7,9 @@ app:
   upload:
     dir: ${user.home}/scanticket-uploads/receipts
 spring:
+  config:
+    # local secrets (git-ignored), see .env.example
+    import: optional:file:.env[.properties]
   datasource:
     url: @dataSource.url@
     username: @dataSource.user@
@@ -45,8 +48,8 @@ spring:
           starttls:
             enable: true
             required: true
-  mailgun:
-    from-email: ${MAILGUN_FROM_EMAIL}
+mailgun:
+  from-email: ${MAILGUN_FROM_EMAIL}
 server:
   servlet:
     context-path: @project.contextPath@

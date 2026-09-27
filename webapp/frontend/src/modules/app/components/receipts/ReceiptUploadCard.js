@@ -45,8 +45,6 @@ const ReceiptUploadCard = ({ onUploadSuccess }) => {
         const formData = new FormData();
         formData.append('image', file);
 
-        console.log('Uploading file:', file.name, file.size, file.type);
-
         uploadReceipt(
             formData,
             (response) => {

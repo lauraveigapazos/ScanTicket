@@ -330,14 +330,48 @@ public class StatisticsServiceTest {
         assertBigDecimalEquals(BigDecimal.valueOf(23.50), spendingByCategory.get("Dairy"));
         //proteins: 10.00
         assertBigDecimalEquals(BigDecimal.valueOf(10.00), spendingByCategory.get("Proteins"));
-        //beverages: 15.00
-        assertBigDecimalEquals(BigDecimal.valueOf(15.00), spendingByCategory.get("Beverages"));
+        //beverages: 15.00 (matches a classifier code, so grouped under it)
+        assertBigDecimalEquals(BigDecimal.valueOf(15.00), spendingByCategory.get("BEVERAGES"));
         //produce: 5.00
         assertBigDecimalEquals(BigDecimal.valueOf(5.00), spendingByCategory.get("Produce"));
         //bakery: 22.00
-        assertBigDecimalEquals(BigDecimal.valueOf(22.00), spendingByCategory.get("Bakery"));
+        assertBigDecimalEquals(BigDecimal.valueOf(22.00), spendingByCategory.get("BAKERY"));
         //snacks: 15.75
-        assertBigDecimalEquals(BigDecimal.valueOf(15.75), spendingByCategory.get("Snacks"));
+        assertBigDecimalEquals(BigDecimal.valueOf(15.75), spendingByCategory.get("SNACKS"));
+    }
+
+    @Test
+    public void testGetSpendingByCategory_MergesLabelsAndCaseVariants() {
+        LocalDate startDate = LocalDate.of(2025, 7, 1);
+        LocalDate endDate = LocalDate.of(2025, 7, 31);
+
+        Receipt receipt = new Receipt();
+        receipt.setDate(LocalDate.of(2025, 7, 10));
+        receipt.setTotal(BigDecimal.valueOf(10.00));
+        receipt.setItems(new ArrayList<>(List.of(
+                itemWithCategories("MEAT", null, 4.00),
+                itemWithCategories("FISH_SEAFOOD", " carne ", 3.00), //user typed the Spanish label
+                itemWithCategories(null, "Compra semanal", 2.00),
+                itemWithCategories(null, "compra SEMANAL", 1.00)
+        )));
+
+        when(receiptDao.findByUserIdAndDateBetween(testUserId, startDate, endDate))
+                .thenReturn(List.of(receipt));
+
+        Map<String, BigDecimal> spendingByCategory = statisticsService.getSpendingByCategory(testUserId, startDate, endDate);
+
+        assertEquals(2, spendingByCategory.size());
+        assertBigDecimalEquals(BigDecimal.valueOf(7.00), spendingByCategory.get("MEAT"));
+        assertBigDecimalEquals(BigDecimal.valueOf(3.00), spendingByCategory.get("Compra semanal"));
+    }
+
+    private ReceiptItem itemWithCategories(String category, String userCategory, double totalPrice) {
+        ReceiptItem item = new ReceiptItem();
+        item.setName("Item");
+        item.setCategory(category);
+        item.setUserCategory(userCategory);
+        item.setTotalPrice(BigDecimal.valueOf(totalPrice));
+        return item;
     }
 
     @Test

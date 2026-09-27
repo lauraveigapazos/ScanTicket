@@ -16,6 +16,7 @@ import ReceiptDetails from "./receipts/ReceiptDetails";
 import ReceiptHistory from "./receipts/ReceiptHistory";
 import EditReceipt from "./receipts/EditReceipt";
 import ReceiptUpload from "./receipts/ReceiptUpload";
+import Analysis from "./statistics/Analysis";
 
 const Body = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -53,6 +54,7 @@ const Body = () => {
                   <Route path="/receipts/upload" element={<ReceiptUpload />} />
                   <Route path="receipts/:receiptId" element={<ReceiptDetails />} />
                   <Route path="receipts/:receiptId/edit" element={<EditReceipt />} />
+                  <Route path="/statistics" element={<Analysis />} />
               </Route>
           </Route>
 

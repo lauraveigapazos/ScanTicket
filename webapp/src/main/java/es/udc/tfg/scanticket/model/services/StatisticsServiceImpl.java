@@ -15,6 +15,36 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class StatisticsServiceImpl implements StatisticsService{
 
+    //Spanish labels shown by the frontend (frontend/src/config/categories.js), keyed by classifier code.
+    //A user category typed as a label or code is grouped under that code.
+    private static final Map<String, String> SPANISH_LABELS_BY_CODE = Map.ofEntries(
+            Map.entry("FRUITS_VEGETABLES", "Frutas y verduras"),
+            Map.entry("MEAT", "Carne"),
+            Map.entry("FISH_SEAFOOD", "Pescado y marisco"),
+            Map.entry("DAIRY_EGGS", "Lácteos y huevos"),
+            Map.entry("BAKERY", "Panadería"),
+            Map.entry("PASTA_RICE_GRAINS", "Pasta, arroz y cereales"),
+            Map.entry("CANNED_PACKAGED", "Conservas y envasados"),
+            Map.entry("SNACKS", "Snacks"),
+            Map.entry("BEVERAGES", "Bebidas"),
+            Map.entry("ALCOHOL", "Alcohol"),
+            Map.entry("FROZEN", "Congelados"),
+            Map.entry("HOUSEHOLD_CLEANING", "Limpieza del hogar"),
+            Map.entry("PERSONAL_CARE", "Cuidado personal"),
+            Map.entry("PET_SUPPLIES", "Mascotas"),
+            Map.entry("OTHER", "Otros"),
+            Map.entry("Uncategorized", "Sin categoría")
+    );
+
+    private static final Map<String, String> CATEGORY_CODES = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    static {
+        SPANISH_LABELS_BY_CODE.forEach((code, label) -> {
+            CATEGORY_CODES.put(code, code);
+            CATEGORY_CODES.put(label, code);
+        });
+    }
+
     private final ReceiptDao receiptDao;
 
     public StatisticsServiceImpl(ReceiptDao receiptDao){
@@ -113,7 +143,8 @@ public class StatisticsServiceImpl implements StatisticsService{
     public Map<String, BigDecimal> getSpendingByCategory(Long userId, LocalDate startDate, LocalDate endDate) {
 
         List<Receipt> receipts = receiptDao.findByUserIdAndDateBetween(userId, startDate, endDate);
-        Map<String, BigDecimal> categorySpending = new TreeMap<>();
+        //case-insensitive keys merge "carne" and "Carne" into one slice
+        Map<String, BigDecimal> categorySpending = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
         receipts.forEach(receipt -> {
             receipt.getItems().forEach(item -> {
@@ -126,6 +157,9 @@ public class StatisticsServiceImpl implements StatisticsService{
                 if (categoryToUse == null || categoryToUse.isBlank()) {
                     categoryToUse = "Uncategorized";
                 }
+
+                categoryToUse = categoryToUse.trim();
+                categoryToUse = CATEGORY_CODES.getOrDefault(categoryToUse, categoryToUse);
 
                 BigDecimal currentTotal = categorySpending.getOrDefault(categoryToUse, BigDecimal.ZERO);
                 categorySpending.put(categoryToUse, currentTotal.add(item.getTotalPrice()));

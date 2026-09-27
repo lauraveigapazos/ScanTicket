@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getReceipt, updateReceipt } from '../../../../backend/receiptService';
+import { categoryLabel } from '../../../../config/categories';
 import '../../../../styles/receipts.css';
 
 const EditReceipt = () => {
@@ -216,11 +217,12 @@ const EditReceipt = () => {
                     <div className="space-y-4">
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="store" className="edit-receipt-label">
                                 Nombre
                             </label>
 
                             <input
+                                id="store"
                                 type="text"
                                 name="store"
                                 value={receipt.store || ''}
@@ -230,11 +232,12 @@ const EditReceipt = () => {
                         </div>
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="storeCif" className="edit-receipt-label">
                                 CIF
                             </label>
 
                             <input
+                                id="storeCif"
                                 type="text"
                                 name="storeCif"
                                 value={receipt.storeCif || ''}
@@ -244,11 +247,12 @@ const EditReceipt = () => {
                         </div>
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="address" className="edit-receipt-label">
                                 Dirección
                             </label>
 
                             <input
+                                id="address"
                                 type="text"
                                 name="address"
                                 value={receipt.address || ''}
@@ -258,11 +262,12 @@ const EditReceipt = () => {
                         </div>
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="phoneNumber" className="edit-receipt-label">
                                 Teléfono
                             </label>
 
                             <input
+                                id="phoneNumber"
                                 type="text"
                                 name="phoneNumber"
                                 value={receipt.phoneNumber || ''}
@@ -341,11 +346,12 @@ const EditReceipt = () => {
                                     <div className="edit-receipt-product-grid">
 
                                         <div className="edit-receipt-field sm:col-span-2">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-name`} className="edit-receipt-label">
                                                 Producto
                                             </label>
 
                                             <input
+                                                id={`item-${index}-name`}
                                                 type="text"
                                                 value={item.name || ''}
                                                 onChange={(event) =>
@@ -360,11 +366,12 @@ const EditReceipt = () => {
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-quantity`} className="edit-receipt-label">
                                                 Cantidad
                                             </label>
 
                                             <input
+                                                id={`item-${index}-quantity`}
                                                 type="number"
                                                 step="0.01"
                                                 min="0"
@@ -381,11 +388,12 @@ const EditReceipt = () => {
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-unit`} className="edit-receipt-label">
                                                 Unidad
                                             </label>
 
                                             <input
+                                                id={`item-${index}-unit`}
                                                 type="text"
                                                 value={item.unit || ''}
                                                 onChange={(event) =>
@@ -400,11 +408,12 @@ const EditReceipt = () => {
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-unitPrice`} className="edit-receipt-label">
                                                 Precio unitario
                                             </label>
 
                                             <input
+                                                id={`item-${index}-unitPrice`}
                                                 type="number"
                                                 step="0.01"
                                                 min="0"
@@ -421,11 +430,12 @@ const EditReceipt = () => {
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-totalPrice`} className="edit-receipt-label">
                                                 Precio total
                                             </label>
 
                                             <input
+                                                id={`item-${index}-totalPrice`}
                                                 type="number"
                                                 step="0.01"
                                                 min="0"
@@ -442,24 +452,26 @@ const EditReceipt = () => {
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-category`} className="edit-receipt-label">
                                                 Categoría detectada
                                             </label>
 
                                             <input
+                                                id={`item-${index}-category`}
                                                 type="text"
-                                                value={item.category || ''}
+                                                value={categoryLabel(item.category) || ''}
                                                 readOnly
                                                 className="edit-receipt-input bg-gray-100"
                                             />
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-userCategory`} className="edit-receipt-label">
                                                 Mi categoría
                                             </label>
 
                                             <input
+                                                id={`item-${index}-userCategory`}
                                                 type="text"
                                                 value={item.userCategory || ''}
                                                 onChange={(event) =>
@@ -475,11 +487,12 @@ const EditReceipt = () => {
                                         </div>
 
                                         <div className="edit-receipt-field">
-                                            <label className="edit-receipt-label">
+                                            <label htmlFor={`item-${index}-tax`} className="edit-receipt-label">
                                                 IVA
                                             </label>
 
                                             <input
+                                                id={`item-${index}-tax`}
                                                 type="text"
                                                 value={item.tax || ''}
                                                 onChange={(event) =>
@@ -543,11 +556,12 @@ const EditReceipt = () => {
                     <div className="edit-receipt-fields">
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="subtotal" className="edit-receipt-label">
                                 Subtotal
                             </label>
 
                             <input
+                                id="subtotal"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -559,11 +573,12 @@ const EditReceipt = () => {
                         </div>
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="taxAmount" className="edit-receipt-label">
                                 Impuestos
                             </label>
 
                             <input
+                                id="taxAmount"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -575,11 +590,12 @@ const EditReceipt = () => {
                         </div>
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="total" className="edit-receipt-label">
                                 Total
                             </label>
 
                             <input
+                                id="total"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -591,11 +607,12 @@ const EditReceipt = () => {
                         </div>
 
                         <div className="edit-receipt-field">
-                            <label className="edit-receipt-label">
+                            <label htmlFor="paymentMethod" className="edit-receipt-label">
                                 Forma de pago
                             </label>
 
                             <input
+                                id="paymentMethod"
                                 type="text"
                                 name="paymentMethod"
                                 value={receipt.paymentMethod || ''}

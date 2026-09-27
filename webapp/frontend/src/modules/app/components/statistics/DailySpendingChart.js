@@ -1,88 +1,64 @@
 import React from 'react';
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer
+} from 'recharts';
 import '../../../../styles/statistics.css';
+
+const AXIS_TICK = { fontSize: 12, fill: '#32433DB3' };
 
 const DailySpendingChart = ({ dailySpending }) => {
     if (!dailySpending || dailySpending.length === 0) {
         return null;
     }
 
-    //find max value for scaling
-    const maxAmount = Math.max(...dailySpending.map(d => d.amount), 100);
-    const scale = 100 / maxAmount;
+    const maxAmount = Math.round(Math.max(...dailySpending.map(d => d.amount), 100));
 
     return (
         <div className="chart-card">
             <h3 className="chart-title">Gastos por día</h3>
 
-            <div className="chart-container">
-                <div className="chart-y-axis">
-                    <div className="chart-y-label">€{Math.round(maxAmount)}</div>
-                    <div className="chart-y-label">€{Math.round(maxAmount / 2)}</div>
-                    <div className="chart-y-label">€0</div>
-                </div>
-
-                <div className="chart-plot">
-                    <svg viewBox={`0 0 ${dailySpending.length * 20} 120`} className="chart-svg" preserveAspectRatio="xMidYMid meet">
-                        {/* grid lines */}
-                        <line x1="0" y1="100" x2={dailySpending.length * 20} y2="100" className="chart-grid-line" />
-                        <line x1="0" y1="50" x2={dailySpending.length * 20} y2="50" className="chart-grid-line" />
-
-                        {/* line path */}
-                        <polyline
-                            points={dailySpending
-                                .map((d, i) => {
-                                    const x = i * 20 + 10;
-                                    const y = 100 - (d.amount * scale);
-                                    return `${x},${y}`;
-                                })
-                                .join(' ')}
-                            className="chart-line"
-                            fill="none"
-                        />
-
-                        {/* area under line */}
-                        <polygon
-                            points={`0,100 ${dailySpending
-                                .map((d, i) => {
-                                    const x = i * 20 + 10;
-                                    const y = 100 - (d.amount * scale);
-                                    return `${x},${y}`;
-                                })
-                                .join(' ')} ${dailySpending.length * 20},100`}
-                            className="chart-area"
-                        />
-
-                        {/* dots */}
-                        {dailySpending.map((d, i) => {
-                            const x = i * 20 + 10;
-                            const y = 100 - (d.amount * scale);
-                            return (
-                                <circle
-                                    key={i}
-                                    cx={x}
-                                    cy={y}
-                                    r="2.5"
-                                    className="chart-dot"
-                                />
-                            );
-                        })}
-                    </svg>
-
-                    {/* X-axis labels */}
-                    <div className="chart-x-axis">
-                        {[0, Math.floor(dailySpending.length / 2), dailySpending.length - 1].map(
-                            (idx) => {
-                                if (idx >= dailySpending.length) return null;
-                                return (
-                                    <span key={idx} className="chart-x-label" style={{marginLeft: idx === 0 ? 0 : 'auto', marginRight: idx === dailySpending.length - 1 ? 0 : 'auto'}}>
-                                        {dailySpending[idx].day}
-                                    </span>
-                                );
-                            }
-                        )}
-                    </div>
-                </div>
-            </div>
+            <ResponsiveContainer width="100%" height={200}>
+                <LineChart data={dailySpending} margin={{ top: 5, right: 10, bottom: 0, left: 0 }}>
+                    <CartesianGrid stroke="#CFD5D1" strokeOpacity={0.6} />
+                    <XAxis
+                        dataKey="day"
+                        height={20}
+                        tick={AXIS_TICK}
+                        tickLine={false}
+                        axisLine={false}
+                        interval="preserveStartEnd"
+                        minTickGap={20}
+                    />
+                    <YAxis
+                        domain={[0, maxAmount]}
+                        ticks={[0, Math.round(maxAmount / 2), maxAmount]}
+                        tickFormatter={(value) => `€${value}`}
+                        width={40}
+                        tick={AXIS_TICK}
+                        tickLine={false}
+                        axisLine={false}
+                    />
+                    <Tooltip
+                        isAnimationActive={false}
+                        formatter={(value) => [`€${value.toFixed(2)}`, 'Gasto']}
+                        labelFormatter={(day) => `Día ${day}`}
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="amount"
+                        stroke="#7AA89D"
+                        strokeWidth={2}
+                        dot={{ r: 3, fill: '#7AA89D', stroke: 'none' }}
+                        activeDot={{ r: 5 }}
+                    />
+                </LineChart>
+            </ResponsiveContainer>
         </div>
     );
 };
