@@ -4,6 +4,7 @@ import {
     tryLoginFromServiceToken,
     updateProfile,
 } from '../../../../backend/userService';
+import Header from '../ui/Header';
 import '../../../../styles/profile.css';
 
 export default function EditProfile() {
@@ -175,13 +176,7 @@ export default function EditProfile() {
 
     return (
         <div className="profile-page">
-            <div className="profile-header">
-                <div className="profile-header-content">
-                    <h1 className="profile-header-title">
-                        Editar perfil
-                    </h1>
-                </div>
-            </div>
+            <Header title="Editar perfil" onBack={() => navigate(-1)}/>
 
             <div className="profile-content">
                 <div className="profile-card">

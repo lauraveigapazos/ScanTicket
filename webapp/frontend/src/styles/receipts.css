@@ -111,13 +111,6 @@
 
 /* ===== RECEIPT DETAILS ===== */
 
-.page-header-back {
-    @apply inline-flex items-center justify-center w-10 h-10
-    rounded-full text-myrtle
-    hover:bg-smoke transition-colors
-    focus:outline-none focus:ring-2 focus:ring-cambridge;
-}
-
 .receipt-detail-hero {
     @apply bg-white rounded-xl border border-timberwolf
     shadow-sm p-6 text-center;

@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +34,8 @@ public class OcrServiceImpl implements OcrService {
 
             pb.directory(new File(System.getProperty("user.dir")));
             pb.redirectErrorStream(true);
+            //python pipes default to the OS code page (cp1252 on Windows); force UTF-8 on both ends
+            pb.environment().put("PYTHONIOENCODING", "utf-8");
             Process process = pb.start();
 
             String output = readProcessOutput(process);
@@ -65,7 +68,7 @@ public class OcrServiceImpl implements OcrService {
         StringBuilder output = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()))) {
+                new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");

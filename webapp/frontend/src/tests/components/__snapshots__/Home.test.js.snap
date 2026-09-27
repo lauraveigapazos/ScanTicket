@@ -5,61 +5,62 @@ exports[`Home renders correctly 1`] = `
   className="min-h-screen bg-smoke"
 >
   <header
-    className="home-header-top"
+    className="home-header"
   >
-    <button
-      aria-label="Toggle menu"
-      className="home-header-menu-button"
-      onClick={[Function]}
+    <div
+      className="home-header-left"
     >
-      <svg
-        className="home-header-menu-icon"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+      <button
+        aria-label="Toggle menu"
+        className="home-header-menu-button"
+        onClick={[Function]}
       >
-        <line
-          x1="3"
-          x2="21"
-          y1="6"
-          y2="6"
-        />
-        <line
-          x1="3"
-          x2="21"
-          y1="12"
-          y2="12"
-        />
-        <line
-          x1="3"
-          x2="21"
-          y1="18"
-          y2="18"
-        />
-      </svg>
-    </button>
-    <h1
-      className="home-header-mobile-title"
-    >
-      Este mes
-    </h1>
+        <svg
+          className="home-header-menu-icon"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            x1="3"
+            x2="21"
+            y1="6"
+            y2="6"
+          />
+          <line
+            x1="3"
+            x2="21"
+            y1="12"
+            y2="12"
+          />
+          <line
+            x1="3"
+            x2="21"
+            y1="18"
+            y2="18"
+          />
+        </svg>
+      </button>
+      <h1
+        className="home-header-title"
+      >
+        Este mes
+      </h1>
+    </div>
+    <div
+      className="w-10 md:hidden"
+    />
   </header>
-  <header
-    className="home-header-content"
-  >
-    <h1
-      className="home-header-title"
-    >
-      Este mes
-    </h1>
-  </header>
+  <div
+    className="h-16 md:hidden"
+  />
   <div
     className="home-header-divider hidden md:block"
   />
   <div
-    className="px-5 py-6 space-y-6 pb-20 mt-16 md:mt-0"
+    className="px-5 py-6 space-y-6 pb-20"
   >
     <div
       className="text-center py-12"

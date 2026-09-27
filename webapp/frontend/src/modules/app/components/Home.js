@@ -45,7 +45,7 @@ const Home = () => {
         loadStatistics();
     }, []);
 
-    //load images of the receipts shown
+    //load images of receipts
     useEffect(() => {
         latestReceipts.forEach((receipt) => {
             if (receipt.imagePath && !receiptImages[receipt.id]) {
@@ -113,7 +113,7 @@ const Home = () => {
                 onMenuClick={() => setSidebarOpen(!sidebarOpen)}
             />
 
-            <div className="px-5 py-6 space-y-6 pb-20 mt-16 md:mt-0">
+            <div className="px-5 py-6 space-y-6 pb-20">
 
                 {error && (
                     <div className="p-4 rounded-lg bg-melon/10 border border-melon/30 text-sm text-melon font-sans">

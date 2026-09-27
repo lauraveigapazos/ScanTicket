@@ -9,6 +9,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -103,6 +104,14 @@ public class OcrServiceTest {
     }
 
     @Test
+    public void testReadProcessOutput_KeepsAccents() throws IOException{
+
+        Process process = createMockProcess("Plátano de Canarias");
+
+        assertTrue(ocrService.readProcessOutput(process).contains("Plátano de Canarias"));
+    }
+
+    @Test
     public void testParseOcrOutput_CompleteReceipt(){
 
         String jsonOutput = "{\n" +
@@ -145,7 +154,7 @@ public class OcrServiceTest {
     private Process createMockProcess(String output) throws IOException{
 
         return new Process() {
-            private final InputStream inputStream = new ByteArrayInputStream(output.getBytes());
+            private final InputStream inputStream = new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8));
             private boolean isAlive = true;
 
             @Override

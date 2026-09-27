@@ -21,6 +21,10 @@ spring:
     remove-abandoned-timeout: 60
     log-abandoned: true
     validation-query: SELECT 1
+  sql:
+    init:
+      # data.sql is UTF-8; without this Java 17 on Windows reads it as cp1252 (PlÃ¡tano)
+      encoding: UTF-8
   devtools:
     restart:
       trigger-file: reload

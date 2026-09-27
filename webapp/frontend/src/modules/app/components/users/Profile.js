@@ -1,12 +1,14 @@
 // src/modules/app/components/profile/Profile.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { tryLoginFromServiceToken, logout } from '../../../../backend/userService';
+import Header from '../ui/Header';
 import '../../../../styles/profile.css';
 
 export default function Profile() {
     const navigate = useNavigate();
     const { id } = useParams();
+    const { sidebarOpen, setSidebarOpen } = useOutletContext() || {};
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -78,34 +80,28 @@ export default function Profile() {
 
     return (
         <div className="profile-page">
-            <div className="profile-header">
-                <div className="profile-header-content">
-                    <h1 className="profile-header-title">
-                        Perfil
-                    </h1>
-
-                    <button
-                        onClick={handleLogout}
-                        className="profile-logout-button"
-                        title="Cerrar sesión"
+            <Header title="Perfil" onMenuClick={() => setSidebarOpen(!sidebarOpen)}>
+                <button
+                    onClick={handleLogout}
+                    className="profile-logout-button"
+                    title="Cerrar sesión"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-melon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-melon"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                </button>
+            </Header>
 
             <div className="profile-content">
                 <div className="profile-card">

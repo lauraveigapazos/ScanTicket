@@ -1,8 +1,10 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import ReceiptUploadCard from "./ReceiptUploadCard";
+import Header from "../ui/Header";
 
 const ReceiptUpload = () => {
     const navigate = useNavigate();
+    const { sidebarOpen, setSidebarOpen } = useOutletContext() || {};
 
     const handleUploadSuccess = (response) => {
         //redirect home
@@ -13,29 +15,7 @@ const ReceiptUpload = () => {
 
     return (
         <div className="min-h-screen bg-smoke pb-20">
-            {/* header */}
-            <div className="bg-white border-b-2 border-timberwolf px-5 py-4 sticky top-0 z-20">
-                <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="p-2 hover:bg-smoke rounded-lg transition-colors"
-                        aria-label="Volver"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6 text-slate-gray"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        >
-                            <line x1="19" y1="12" x2="5" y2="12" />
-                            <polyline points="12 19 5 12 12 5" />
-                        </svg>
-                    </button>
-                    <h1 className="text-lg font-bold text-slate-gray font-heading">Subir ticket</h1>
-                </div>
-            </div>
+            <Header title="Subir ticket" onMenuClick={() => setSidebarOpen(!sidebarOpen)}/>
 
             <div className="px-5 py-6 max-w-2xl mx-auto">
                 <div className="card">

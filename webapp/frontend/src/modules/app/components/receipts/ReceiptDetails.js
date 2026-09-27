@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getReceipt } from '../../../../backend/receiptService';
 import { categoryLabel } from '../../../../config/categories';
+import Header from '../ui/Header';
 
 const ReceiptDetails = () => {
     const { receiptId } = useParams();
@@ -119,35 +120,7 @@ const ReceiptDetails = () => {
     if (loading) {
         return (
             <div className="min-h-screen bg-smoke">
-                <header className="page-header">
-                    <div className="page-header-content">
-                        <button
-                            type="button"
-                            onClick={handleBack}
-                            className="page-header-back"
-                            aria-label="Volver"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="m15 18-6-6 6-6" />
-                            </svg>
-                        </button>
-
-                        <h1 className="page-header-title">
-                            Recibo
-                        </h1>
-
-                        <div className="w-10" />
-                    </div>
-                </header>
+                <Header title="Recibo" onBack={handleBack}/>
 
                 <div className="flex justify-center py-16">
                     <div className="animate-spin rounded-full h-8 w-8 border-4 border-cambridge border-t-myrtle" />
@@ -160,35 +133,7 @@ const ReceiptDetails = () => {
     if (error || !receipt) {
         return (
             <div className="min-h-screen bg-smoke">
-                <header className="page-header">
-                    <div className="page-header-content">
-                        <button
-                            type="button"
-                            onClick={handleBack}
-                            className="page-header-back"
-                            aria-label="Volver"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="m15 18-6-6 6-6" />
-                            </svg>
-                        </button>
-
-                        <h1 className="page-header-title">
-                            Recibo
-                        </h1>
-
-                        <div className="w-10" />
-                    </div>
-                </header>
+                <Header title="Recibo" onBack={handleBack}/>
 
                 <main className="px-5 py-6">
                     <div className="alert alert-error">
@@ -213,35 +158,7 @@ const ReceiptDetails = () => {
         <div className="min-h-screen bg-smoke pb-20">
 
             {/* header */}
-            <header className="page-header">
-                <div className="page-header-content">
-                    <button
-                        type="button"
-                        onClick={handleBack}
-                        className="page-header-back"
-                        aria-label="Volver"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <path d="m15 18-6-6 6-6" />
-                        </svg>
-                    </button>
-
-                    <h1 className="page-header-title">
-                        Recibo
-                    </h1>
-
-                    <div className="w-10" />
-                </div>
-            </header>
+            <Header title="Recibo" onBack={handleBack}/>
 
             <main className="px-5 py-6 space-y-5">
 

@@ -23,18 +23,6 @@
     @apply min-h-screen bg-smoke;
 }
 
-.profile-header {
-    @apply sticky top-0 z-10 bg-white border-b border-timberwolf/30 px-5 py-4;
-}
-
-.profile-header-content {
-    @apply flex items-center justify-between;
-}
-
-.profile-header-title {
-    @apply text-2xl font-bold font-heading text-slate-gray;
-}
-
 .profile-logout-button {
     @apply inline-flex items-center justify-center w-10 h-10 rounded-full
     bg-melon/20 hover:bg-melon/30 transition-colors

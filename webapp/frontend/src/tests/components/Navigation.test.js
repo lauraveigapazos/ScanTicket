@@ -23,6 +23,22 @@ describe("Header", () => {
 
     expect(screen.queryByLabelText("Profile")).not.toBeInTheDocument();
   });
+
+  it("shows a back button instead of the menu on sub-pages", () => {
+    const onBack = jest.fn();
+    renderWithRouter(<Header title="Recibo" onBack={onBack} />);
+
+    expect(screen.queryByLabelText("Toggle menu")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText("Volver"));
+    expect(onBack).toHaveBeenCalled();
+  });
+
+  it("puts page actions in place of the profile button", () => {
+    renderWithRouter(<Header user={{ id: 7 }}><button>Acción</button></Header>);
+
+    expect(screen.getByRole("button", { name: "Acción" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Profile")).not.toBeInTheDocument();
+  });
 });
 
 describe("Sidebar", () => {
