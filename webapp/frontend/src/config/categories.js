@@ -18,5 +18,7 @@ const CATEGORY_LABELS = {
     Uncategorized: "Sin categoría",
 };
 
+export const CATEGORY_OPTIONS = Object.entries(CATEGORY_LABELS);
+
 // user categories are free text, so unknown values are shown as typed
 export const categoryLabel = (category) => CATEGORY_LABELS[category] ?? category;

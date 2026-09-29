@@ -46,10 +46,14 @@ describe("receipt category labels", () => {
     expect(text).not.toContain("FISH_SEAFOOD");
   });
 
-  it("EditReceipt shows the detected category in Spanish", () => {
+  it("EditReceipt lets the category be picked from the known ones", () => {
     const tree = mount(<EditReceipt />);
-    const readOnlyInputs = tree.root.findAll((node) => node.type === "input" && node.props.readOnly);
+    const select = tree.root.findByType("select");
 
-    expect(readOnlyInputs.map((input) => input.props.value)).toContain("Pescado y marisco");
+    expect(select.props.value).toBe("FISH_SEAFOOD");
+    expect(select.findAllByType("option").map((option) => option.props.children)).toContain("Pescado y marisco");
+
+    act(() => select.props.onChange({ target: { value: "MEAT" } }));
+    expect(tree.root.findByType("select").props.value).toBe("MEAT");
   });
 });

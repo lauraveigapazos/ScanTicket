@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getReceipt, updateReceipt } from '../../../../backend/receiptService';
-import { categoryLabel } from '../../../../config/categories';
+import { CATEGORY_OPTIONS } from '../../../../config/categories';
 import Header from '../ui/Header';
 import '../../../../styles/receipts.css';
 
@@ -369,16 +369,27 @@ const EditReceipt = () => {
 
                                         <div className="edit-receipt-field">
                                             <label htmlFor={`item-${index}-category`} className="edit-receipt-label">
-                                                Categoría detectada
+                                                Categoría
                                             </label>
 
-                                            <input
+                                            <select
                                                 id={`item-${index}-category`}
-                                                type="text"
-                                                value={categoryLabel(item.category) || ''}
-                                                readOnly
-                                                className="edit-receipt-input bg-gray-100"
-                                            />
+                                                value={item.category || 'Uncategorized'}
+                                                onChange={(event) =>
+                                                    handleItemChange(
+                                                        index,
+                                                        'category',
+                                                        event.target.value
+                                                    )
+                                                }
+                                                className="edit-receipt-input edit-receipt-select"
+                                            >
+                                                {CATEGORY_OPTIONS.map(([code, label]) => (
+                                                    <option key={code} value={code}>
+                                                        {label}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
 
                                         <div className="edit-receipt-field">

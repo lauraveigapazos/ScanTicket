@@ -19,6 +19,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -139,7 +140,7 @@ public class ReceiptController {
     }
 
     @PutMapping("/{receiptId}")
-    public ResponseEntity<ReceiptDto> updateReceipt(@RequestAttribute Long userId, @PathVariable Long receiptId, @RequestBody ReceiptDto receiptDto)
+    public ResponseEntity<ReceiptDto> updateReceipt(@RequestAttribute Long userId, @PathVariable Long receiptId, @Validated @RequestBody ReceiptDto receiptDto)
             throws InstanceNotFoundException{
 
         List<ReceiptItem> items = null;

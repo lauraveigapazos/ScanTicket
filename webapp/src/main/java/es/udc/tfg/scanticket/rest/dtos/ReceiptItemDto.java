@@ -1,5 +1,7 @@
 package es.udc.tfg.scanticket.rest.dtos;
 
+import jakarta.validation.constraints.Pattern;
+
 import java.math.BigDecimal;
 
 public class ReceiptItemDto {
@@ -86,6 +88,8 @@ public class ReceiptItemDto {
         this.totalPrice = totalPrice;
     }
 
+    //match existing categories
+    @Pattern(regexp = "FRUITS_VEGETABLES|MEAT|FISH_SEAFOOD|DAIRY_EGGS|BAKERY|PASTA_RICE_GRAINS|CANNED_PACKAGED|SNACKS|BEVERAGES|ALCOHOL|FROZEN|HOUSEHOLD_CLEANING|PERSONAL_CARE|PET_SUPPLIES|OTHER|Uncategorized")
     public String getCategory() {
         return category;
     }

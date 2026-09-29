@@ -1,5 +1,7 @@
 package es.udc.tfg.scanticket.rest.dtos;
 
+import jakarta.validation.Valid;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -140,7 +142,7 @@ public class ReceiptDto {
         this.paymentMethod = paymentMethod;
     }
 
-    public List<ReceiptItemDto> getItems() {
+    public List<@Valid ReceiptItemDto> getItems() {
         return items;
     }
 

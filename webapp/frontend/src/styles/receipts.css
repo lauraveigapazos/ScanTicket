@@ -288,6 +288,62 @@
     @apply border-cambridge/60;
 }
 
+.edit-receipt-select {
+    @apply appearance-none
+    pr-10
+    cursor-pointer
+    bg-no-repeat
+    bg-[right_0.875rem_center]
+    bg-[length:1rem_1rem];
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233D6F68' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* category option list */
+@supports (appearance: base-select) {
+    .edit-receipt-select,
+    .edit-receipt-select::picker(select) {
+        appearance: base-select;
+    }
+
+    .edit-receipt-select::picker-icon {
+        display: none;
+    }
+
+    .edit-receipt-select::picker(select) {
+        @apply mt-1 p-1.5
+        max-h-72
+        rounded-lg
+        bg-white
+        border border-timberwolf
+        shadow-lg;
+    }
+
+    .edit-receipt-select option {
+        @apply px-3 py-2
+        rounded-md
+        text-sm
+        text-slate-gray
+        cursor-pointer
+        transition-colors duration-150;
+    }
+
+    .edit-receipt-select option:hover,
+    .edit-receipt-select option:focus-visible {
+        @apply bg-cambridge/15
+        outline-none;
+    }
+
+    .edit-receipt-select option:checked {
+        @apply bg-cambridge/25
+        text-myrtle
+        font-semibold;
+    }
+
+    .edit-receipt-select option::checkmark {
+        @apply text-myrtle;
+    }
+}
+
 .edit-receipt-input:disabled {
     @apply opacity-60
     cursor-not-allowed;

@@ -304,17 +304,13 @@ const ReceiptDetails = () => {
                                                 item.tax) && (
                                                 <div className="flex flex-wrap gap-2 mt-2">
 
-                                                    {item.userCategory ? (
+                                                    {item.userCategory && (
                                                         <span className="badge badge-primary">
                                                             {categoryLabel(item.userCategory)}
                                                         </span>
-                                                    ) : item.category ? (
-                                                        <span className="badge badge-primary">
-                                                            {categoryLabel(item.category)}
-                                                        </span>
-                                                    ) : null}
+                                                    )}
 
-                                                    {item.userCategory && item.category && (
+                                                    {item.category && (
                                                         <span className="badge-category">
                                                             {categoryLabel(item.category)}
                                                         </span>
