@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
     PieChart,
     Pie,
@@ -7,6 +7,7 @@ import {
     Tooltip
 } from 'recharts';
 import { categoryLabel } from '../../../../config/categories';
+import '../../../../styles/statistics.css';
 
 const COLORS = [
     '#5E8F84', // viridian
@@ -19,26 +20,97 @@ const COLORS = [
     '#32433D', // slate-gray
 ];
 
-const CategorySpendingWheel = ({ spendingByCategory }) => {
+const CATEGORY_SOURCES = [
+    { value: 'preferred', label: 'Automáticas y mías (prioridad a las mías)' },
+    { value: 'automatic', label: 'Solo automáticas' },
+    { value: 'user', label: 'Solo mías' },
+];
+
+const CategorySourceMenu = ({ source, onChange }) => {
+    const [open, setOpen] = useState(false);
+
+    const closeWhenFocusLeaves = (event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+            setOpen(false);
+        }
+    };
+
+    return (
+        <div className="category-source" onBlur={closeWhenFocusLeaves}>
+            <button
+                type="button"
+                onClick={() => setOpen((current) => !current)}
+                className="category-source-button"
+                aria-haspopup="menu"
+                aria-expanded={open}
+            >
+                Categorías mostradas
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M4 6h16"/>
+                    <path d="M7 12h10"/>
+                    <path d="M10 18h4"/>
+                </svg>
+            </button>
+
+            {open && (
+                <div role="menu" className="category-source-menu">
+                    {CATEGORY_SOURCES.map((option) => (
+                        <button
+                            key={option.value}
+                            type="button"
+                            role="menuitemradio"
+                            aria-checked={option.value === source}
+                            onClick={() => {
+                                onChange(option.value);
+                                setOpen(false);
+                            }}
+                            className="category-source-option"
+                        >
+                            {option.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const CategorySpendingWheel = ({ spendingByCategory, spendingByAutomaticCategory, spendingByUserCategory }) => {
+
+    const [source, setSource] = useState('preferred');
+
+    const spending = {
+        preferred: spendingByCategory,
+        automatic: spendingByAutomaticCategory,
+        user: spendingByUserCategory,
+    }[source];
 
     const data = useMemo(() => {
-        if (!spendingByCategory || spendingByCategory.length === 0) {
+        if (!spending || spending.length === 0) {
             return [];
         }
 
-        return spendingByCategory.map((item, index) => ({
+        return spending.map((item, index) => ({
             name: categoryLabel(item.category),
             value: parseFloat(item.amount),
             color: COLORS[index % COLORS.length]
         }));
-    }, [spendingByCategory]);
+    }, [spending]);
+
+    const header = (
+        <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xs font-semibold text-slate-gray/60 uppercase tracking-widest font-heading">
+                Gasto por categoría
+            </h3>
+            <CategorySourceMenu source={source} onChange={setSource} />
+        </div>
+    );
 
     if (!data || data.length === 0) {
         return (
             <div className="card">
-                <h3 className="text-xs font-semibold text-slate-gray/60 uppercase tracking-widest mb-4 font-heading">
-                    Gasto por categoría
-                </h3>
+                {header}
                 <div className="text-center py-8">
                     <p className="text-sm text-slate-gray/60">
                         No hay datos de categorías disponibles
@@ -68,9 +140,7 @@ const CategorySpendingWheel = ({ spendingByCategory }) => {
 
     return (
         <div className="card">
-            <h3 className="text-xs font-semibold text-slate-gray/60 uppercase tracking-widest mb-4 font-heading">
-                Gasto por categoría
-            </h3>
+            {header}
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 {/* chart */}

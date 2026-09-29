@@ -154,7 +154,11 @@ const Analysis = () => {
                         {statistics.receiptCount > 0 ? (
                             <>
                                 <DailySpendingChart dailySpending={statistics.dailySpending} />
-                                <CategorySpendingWheel spendingByCategory={statistics.spendingByCategory} />
+                                <CategorySpendingWheel
+                                    spendingByCategory={statistics.spendingByCategory}
+                                    spendingByAutomaticCategory={statistics.spendingByAutomaticCategory}
+                                    spendingByUserCategory={statistics.spendingByUserCategory}
+                                />
                             </>
                         ) : (
                             <div className="card text-center py-12">

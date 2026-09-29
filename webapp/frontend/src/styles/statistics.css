@@ -80,3 +80,49 @@
 .recharts-wrapper :focus:not(:focus-visible) {
     outline: none;
 }
+
+/* ===== CATEGORY SOURCE MENU ===== */
+.category-source {
+    @apply relative;
+}
+
+.category-source-button {
+    @apply h-8 -my-2 px-2.5
+    inline-flex items-center gap-1.5
+    rounded-full
+    text-xs font-medium
+    text-myrtle
+    transition-colors
+    hover:bg-cambridge/15
+    focus:outline-none
+    focus-visible:ring-2
+    focus-visible:ring-cambridge;
+}
+
+.category-source-menu {
+    @apply absolute right-0 top-full z-10
+    mt-2 p-1.5
+    w-64
+    rounded-lg
+    bg-white
+    border border-timberwolf
+    shadow-lg;
+}
+
+.category-source-option {
+    @apply w-full
+    px-3 py-2
+    rounded-md
+    text-left text-sm
+    text-slate-gray
+    transition-colors duration-150
+    hover:bg-cambridge/15
+    focus:outline-none
+    focus-visible:bg-cambridge/15;
+}
+
+.category-source-option[aria-checked="true"] {
+    @apply bg-cambridge/25
+    text-myrtle
+    font-semibold;
+}
