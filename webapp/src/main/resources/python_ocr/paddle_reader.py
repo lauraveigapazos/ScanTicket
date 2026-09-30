@@ -2,8 +2,8 @@ import sys
 import os
 os.environ['FLAGS_use_mkldnn'] = 'False'
 os.environ['FLAGS_allocator_strategy'] = 'auto_growth'
-os.environ['OMP_NUM_THREADS'] = '1'
-os.environ['MKL_NUM_THREADS'] = '1'
+os.environ['OMP_NUM_THREADS'] = '8'
+os.environ['MKL_NUM_THREADS'] = '8'
 os.environ['CUDA_VISIBLE_DEVICES'] = ''  # disable GPU
 os.environ['NCCL_P2P_DISABLE'] = '1'
 import cv2
@@ -39,12 +39,9 @@ def preprocess_image(image_path):
         
     return img
     
-def extract_text_from_image(image_path, lang=DEFAULT_LANGUAGE):
-    
+def extract_text_from_image(image_path, ocr):
+
     processed_img = preprocess_image(image_path)
-    
-    # initialize ocr
-    ocr = PaddleOCR(lang=lang, use_textline_orientation=True)
 
     # structure results
     results = ocr.predict(processed_img)
@@ -67,53 +64,49 @@ def extract_text_from_image(image_path, lang=DEFAULT_LANGUAGE):
 
     return extracted_text, ocr_details, processed_img
     
+def process(image_path, config, ocr, classifier):
+
+    #check image exists
+    if not Path(image_path).exists():
+        raise FileNotFoundError(f"Image file not found: {image_path}")
+
+    #extract text
+    extracted_text, ocr_details, processed_img = extract_text_from_image(image_path, ocr)
+
+    # parse receipt
+    receipt = parse_receipt_text(extracted_text, config=config)
+
+    # categorize products
+    return categorize_receipt(receipt.to_dict(), classifier)
+
 def main():
-    
-    if len(sys.argv) < 2:
-        error = {"error": "Missing image path"}
-        print(json.dumps(error))
-        sys.exit(1)
-    
-    language = DEFAULT_LANGUAGE
-    
-    # parse arguments
-    if len(sys.argv) > 2 and not sys.argv[2].startswith('--'):
-        language = sys.argv[2]
-        
-    image_path = sys.argv[1]
-    config_path = sys.argv[2] if len(sys.argv) > 2 else "config.yml"
-    language = DEFAULT_LANGUAGE
+    """
+    long-lived worker: models load once, then each stdin line is an image path.
+    """
 
-    try:
-        
-        #check image exists
-        image_path_obj = Path(image_path)
-        if not image_path_obj.exists():
-            raise FileNotFoundError(f"Image file not found: {image_path}")
-        
-        #extract text
-        extracted_text, ocr_details, processed_img = extract_text_from_image(str(image_path), language)
-        
-        # parse receipt
-        config = read_config(config_path)
-        receipt = parse_receipt_text(extracted_text, config=config)
+    config_path = sys.argv[1] if len(sys.argv) > 1 else "config.yml"
 
-        # initialize categorizer
-        classifier = ProductCategorizer()
+    # load everything once (the slow part)
+    config = read_config(config_path)
+    #skips whole-page orientation and unwarping-> re-enable both if rotated or crumpled photos read badly
+    ocr = PaddleOCR(lang=DEFAULT_LANGUAGE,
+                    use_doc_orientation_classify=False,
+                    use_doc_unwarping=False,
+                    use_textline_orientation=True)
+    classifier = ProductCategorizer()
 
-        # categorize products
-        result = receipt.to_dict()
-        result = categorize_receipt(receipt.to_dict(), classifier)
+    for line in sys.stdin:
+        image_path = line.strip()
+        if not image_path:
+            continue
 
-        # json to stdout
-        print(json.dumps(result, indent=2, ensure_ascii=False))
-        sys.exit(0)
-        
-    except Exception as e:
-        error = {"error": str(e), "type": type(e).__name__}
-        print(json.dumps(error))
-        sys.exit(1) 
-    
+        try:
+            result = process(image_path, config, ocr, classifier)
+        except Exception as e:
+            result = {"error": str(e), "type": type(e).__name__}
+
+        print("RESULT " + json.dumps(result, ensure_ascii=False), flush=True)
+
 if __name__ == "__main__":
     main()
     

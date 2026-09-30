@@ -19,3 +19,8 @@ mailgun:
 app:
   upload:
     dir: target/test-uploads/receipts
+
+#no python ocr worker during tests
+ocr:
+  worker:
+    preload: false
