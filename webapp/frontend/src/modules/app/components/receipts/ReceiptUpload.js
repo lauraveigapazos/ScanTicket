@@ -7,10 +7,7 @@ const ReceiptUpload = () => {
     const { sidebarOpen, setSidebarOpen } = useOutletContext() || {};
 
     const handleUploadSuccess = (response) => {
-        //redirect home
-        setTimeout(() => {
-            navigate('/home');
-        }, 1500);
+        navigate(`/receipts/${response.id}`, { replace: true });
     };
 
     return (

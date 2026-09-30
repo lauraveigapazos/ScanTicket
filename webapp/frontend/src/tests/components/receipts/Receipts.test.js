@@ -1,9 +1,10 @@
 import React from "react";
-import { fireEvent, screen } from "@testing-library/react";
+import { act, fireEvent, screen } from "@testing-library/react";
 import ReceiptCard from "../../../modules/app/components/receipts/ReceiptCard";
 import ReceiptHistory from "../../../modules/app/components/receipts/ReceiptHistory";
 import ReceiptDetails from "../../../modules/app/components/receipts/ReceiptDetails";
 import EditReceipt from "../../../modules/app/components/receipts/EditReceipt";
+import ReceiptUpload from "../../../modules/app/components/receipts/ReceiptUpload";
 import ReceiptUploadCard from "../../../modules/app/components/receipts/ReceiptUploadCard";
 import {
   deleteReceipt,
@@ -123,6 +124,15 @@ describe("ReceiptDetails", () => {
 
     expect(screen.getByText("No se pudo cargar el recibo")).toBeInTheDocument();
   });
+
+  it("opens the edit page from the header", () => {
+    getReceipt.mockImplementation((id, onSuccess) => onSuccess(receipt));
+    renderDetails();
+
+    fireEvent.click(screen.getByLabelText("Editar recibo"));
+
+    expect(screen.getByTestId("location")).toHaveTextContent("/receipts/1/edit");
+  });
 });
 
 describe("EditReceipt", () => {
@@ -185,5 +195,24 @@ describe("ReceiptUploadCard", () => {
 
     expect(uploadReceipt.mock.calls[0][0].get("image")).toBe(image);
     expect(screen.getByText("Formato no soportado")).toBeInTheDocument();
+  });
+});
+
+describe("ReceiptUpload", () => {
+  afterEach(() => jest.useRealTimers());
+
+  it("opens the uploaded receipt's details after a successful upload", async () => {
+    uploadReceipt.mockImplementation((formData, onSuccess) => onSuccess({ id: 7 }));
+    renderWithRouter(<ReceiptUpload />);
+
+    fireEvent.change(screen.getByLabelText(/Toca para cargar/), {
+      target: { files: [new File(["x"], "ticket.jpg", { type: "image/jpeg" })] },
+    });
+    const uploadButton = await screen.findByRole("button", { name: "Subir recibo" });
+    jest.useFakeTimers();
+    fireEvent.click(uploadButton);
+    act(() => jest.runAllTimers());
+
+    expect(screen.getByTestId("location")).toHaveTextContent("/receipts/7");
   });
 });

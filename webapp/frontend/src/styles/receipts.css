@@ -404,63 +404,22 @@
 /* ===== EDIT ACTIONS ===== */
 
 .edit-receipt-actions {
-    @apply flex flex-col-reverse gap-3
-    pt-1;
+    @apply flex gap-3 max-w-xl mx-auto;
 }
 
 .edit-receipt-cancel {
-    @apply w-full
-    inline-flex items-center justify-center
-    px-5 py-3
-    rounded-lg
-    bg-white
-    border-2 border-myrtle
-    text-myrtle
-    font-heading
-    font-semibold
-    text-sm
-    transition-colors duration-200
-    hover:bg-smoke
-    focus:outline-none
-    focus:ring-2
-    focus:ring-myrtle
-    focus:ring-offset-2
-    disabled:opacity-50
-    disabled:cursor-not-allowed;
+    @apply flex-1 bg-timberwolf/20 hover:bg-timberwolf/30
+    text-slate-gray font-semibold py-3 px-4 rounded-lg
+    transition-colors disabled:opacity-50
+    focus:outline-none focus:ring-2 focus:ring-timberwolf focus:ring-offset-2;
 }
 
 .edit-receipt-save {
-    @apply w-full
-    inline-flex items-center justify-center
-    gap-2
-    px-5 py-3
-    rounded-lg
-    bg-myrtle
-    border-2 border-myrtle
-    text-white
-    font-heading
-    font-semibold
-    text-sm
-    transition-all duration-200
-    hover:bg-viridian
-    hover:border-viridian
-    focus:outline-none
-    focus:ring-2
-    focus:ring-cambridge
-    focus:ring-offset-2
-    disabled:opacity-50
-    disabled:cursor-not-allowed;
-}
-
-@media (min-width: 640px) {
-    .edit-receipt-actions {
-        @apply flex-row justify-end;
-    }
-
-    .edit-receipt-cancel,
-    .edit-receipt-save {
-        @apply w-auto min-w-40;
-    }
+    @apply flex-1 bg-cambridge hover:bg-viridian text-white
+    font-semibold py-3 px-4 rounded-lg transition-colors
+    disabled:bg-cambridge/50 disabled:opacity-50
+    flex items-center justify-center gap-2
+    focus:outline-none focus:ring-2 focus:ring-cambridge focus:ring-offset-2;
 }
 
 .edit-receipt-spinner {
