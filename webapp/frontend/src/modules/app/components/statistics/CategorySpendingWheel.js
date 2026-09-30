@@ -79,6 +79,13 @@ const CategorySourceMenu = ({ source, onChange }) => {
 const CategorySpendingWheel = ({ spendingByCategory, spendingByAutomaticCategory, spendingByUserCategory }) => {
 
     const [source, setSource] = useState('preferred');
+    const [hidden, setHidden] = useState(new Set());
+
+    const toggleHidden = (name) => setHidden((current) => {
+        const next = new Set(current);
+        next.has(name) ? next.delete(name) : next.add(name);
+        return next;
+    });
 
     const spending = {
         preferred: spendingByCategory,
@@ -120,7 +127,8 @@ const CategorySpendingWheel = ({ spendingByCategory, spendingByAutomaticCategory
         );
     }
 
-    const total = data.reduce((sum, item) => sum + item.value, 0);
+    const visibleData = data.filter((item) => !hidden.has(item.name));
+    const total = visibleData.reduce((sum, item) => sum + item.value, 0);
 
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
@@ -148,7 +156,7 @@ const CategorySpendingWheel = ({ spendingByCategory, spendingByAutomaticCategory
                     <ResponsiveContainer width="100%" height={200}>
                         <PieChart>
                             <Pie
-                                data={data}
+                                data={visibleData}
                                 cx="50%"
                                 cy="50%"
                                 innerRadius={50}
@@ -157,7 +165,7 @@ const CategorySpendingWheel = ({ spendingByCategory, spendingByAutomaticCategory
                                 dataKey="value"
                                 label={false}
                             >
-                                {data.map((entry, index) => (
+                                {visibleData.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                 ))}
                             </Pie>
@@ -168,23 +176,34 @@ const CategorySpendingWheel = ({ spendingByCategory, spendingByAutomaticCategory
 
                 {/* legend */}
                 <ul className="w-full sm:w-1/2 space-y-1.5">
-                    {data.map((item, index) => (
-                        <li key={`legend-${index}`} className="flex items-center gap-2 text-xs">
-                            <span
-                                className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: item.color }}
-                            />
-                            <span className="flex-1 truncate font-medium text-slate-gray">
-                                {item.name}
-                            </span>
-                            <span className="font-bold text-slate-gray">
-                                €{item.value.toFixed(2)}
-                            </span>
-                            <span className="w-10 text-right text-slate-gray/60">
-                                {((item.value / total) * 100).toFixed(1)}%
-                            </span>
-                        </li>
-                    ))}
+                    {data.map((item, index) => {
+                        const isHidden = hidden.has(item.name);
+                        return (
+                            <li key={`legend-${index}`}>
+                                <button
+                                    type="button"
+                                    onClick={() => toggleHidden(item.name)}
+                                    aria-pressed={!isHidden}
+                                    title={isHidden ? 'Mostrar en el gráfico' : 'Ocultar del gráfico'}
+                                    className={`w-full flex items-center gap-2 text-xs text-left cursor-pointer ${isHidden ? 'opacity-40' : ''}`}
+                                >
+                                    <span
+                                        className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                        style={{ backgroundColor: item.color }}
+                                    />
+                                    <span className="flex-1 truncate font-medium text-slate-gray">
+                                        {item.name}
+                                    </span>
+                                    <span className="font-bold text-slate-gray">
+                                        €{item.value.toFixed(2)}
+                                    </span>
+                                    <span className="w-10 text-right text-slate-gray/60">
+                                        {isHidden ? '' : `${((item.value / total) * 100).toFixed(1)}%`}
+                                    </span>
+                                </button>
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
         </div>

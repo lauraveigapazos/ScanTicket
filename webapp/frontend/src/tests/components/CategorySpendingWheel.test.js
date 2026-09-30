@@ -57,6 +57,27 @@ describe("CategorySpendingWheel", () => {
     expect(textOf(tree)).toContain("100.0");
   });
 
+  it("toggles a category off and on from the legend", () => {
+    const tree = renderer.create(
+      <CategorySpendingWheel
+        spendingByCategory={[
+          { category: "MEAT", amount: 30 },
+          { category: "Compra semanal", amount: 10 },
+        ]}
+      />
+    );
+    const legendButton = () => tree.root.findAll((node) => node.type === "button" && "aria-pressed" in node.props)[0];
+
+    act(() => legendButton().props.onClick());
+    expect(legendButton().props.className).toContain("opacity-40");
+    expect(legendButton().props["aria-pressed"]).toBe(false);
+    expect(textOf(tree)).toContain("100.0");
+
+    act(() => legendButton().props.onClick());
+    expect(legendButton().props.className).not.toContain("opacity-40");
+    expect(textOf(tree)).toContain("75.0");
+  });
+
   it("shows the empty message when there are no categories", () => {
     const tree = renderer.create(<CategorySpendingWheel spendingByCategory={[]} />);
 
