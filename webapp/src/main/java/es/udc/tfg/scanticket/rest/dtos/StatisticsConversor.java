@@ -24,6 +24,8 @@ public class StatisticsConversor  {
         statisticsDto.setAverageSpendingPerDay((BigDecimal) statistics.get("averageSpendingPerDay"));
         statisticsDto.setDailySpending(convertDailySpending((Map<LocalDate, BigDecimal>) statistics.get("dailySpending")));
         statisticsDto.setSpendingByCategory(convertSpendingByCategory((Map<String, BigDecimal>) statistics.get("spendingByCategory")));
+        statisticsDto.setSpendingByAutomaticCategory(convertSpendingByCategory((Map<String, BigDecimal>) statistics.get("spendingByAutomaticCategory")));
+        statisticsDto.setSpendingByUserCategory(convertSpendingByCategory((Map<String, BigDecimal>) statistics.get("spendingByUserCategory")));
 
         return statisticsDto;
     }

@@ -12,6 +12,8 @@ public class StatisticsDto {
     private BigDecimal averageSpendingPerDay;
     private List<DailySpendingDto> dailySpending;
     private List<CategorySpendingDto> spendingByCategory;
+    private List<CategorySpendingDto> spendingByAutomaticCategory;
+    private List<CategorySpendingDto> spendingByUserCategory;
 
     public StatisticsDto() {
     }
@@ -73,5 +75,21 @@ public class StatisticsDto {
 
     public void setSpendingByCategory(List<CategorySpendingDto> spendingByCategory) {
         this.spendingByCategory = spendingByCategory;
+    }
+
+    public List<CategorySpendingDto> getSpendingByAutomaticCategory() {
+        return spendingByAutomaticCategory;
+    }
+
+    public void setSpendingByAutomaticCategory(List<CategorySpendingDto> spendingByAutomaticCategory) {
+        this.spendingByAutomaticCategory = spendingByAutomaticCategory;
+    }
+
+    public List<CategorySpendingDto> getSpendingByUserCategory() {
+        return spendingByUserCategory;
+    }
+
+    public void setSpendingByUserCategory(List<CategorySpendingDto> spendingByUserCategory) {
+        this.spendingByUserCategory = spendingByUserCategory;
     }
 }

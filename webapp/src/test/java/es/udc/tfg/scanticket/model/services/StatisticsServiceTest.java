@@ -365,6 +365,41 @@ public class StatisticsServiceTest {
         assertBigDecimalEquals(BigDecimal.valueOf(3.00), spendingByCategory.get("Compra semanal"));
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetStatistics_SpendingByCategorySources() {
+        LocalDate startDate = LocalDate.of(2025, 7, 1);
+        LocalDate endDate = LocalDate.of(2025, 7, 31);
+
+        Receipt receipt = new Receipt();
+        receipt.setDate(LocalDate.of(2025, 7, 10));
+        receipt.setTotal(BigDecimal.valueOf(10.00));
+        receipt.setItems(new ArrayList<>(List.of(
+                itemWithCategories("MEAT", null, 4.00),
+                itemWithCategories("FISH_SEAFOOD", "Compra semanal", 6.00)
+        )));
+
+        when(receiptDao.findByUserIdAndDateBetween(testUserId, startDate, endDate))
+                .thenReturn(List.of(receipt));
+
+        Map<String, Object> stats = statisticsService.getStatistics(testUserId, startDate, endDate);
+
+        Map<String, BigDecimal> preferred = (Map<String, BigDecimal>) stats.get("spendingByCategory");
+        assertEquals(2, preferred.size());
+        assertBigDecimalEquals(BigDecimal.valueOf(4.00), preferred.get("MEAT"));
+        assertBigDecimalEquals(BigDecimal.valueOf(6.00), preferred.get("Compra semanal"));
+
+        Map<String, BigDecimal> automatic = (Map<String, BigDecimal>) stats.get("spendingByAutomaticCategory");
+        assertEquals(2, automatic.size());
+        assertBigDecimalEquals(BigDecimal.valueOf(4.00), automatic.get("MEAT"));
+        assertBigDecimalEquals(BigDecimal.valueOf(6.00), automatic.get("FISH_SEAFOOD"));
+
+        Map<String, BigDecimal> user = (Map<String, BigDecimal>) stats.get("spendingByUserCategory");
+        assertEquals(2, user.size());
+        assertBigDecimalEquals(BigDecimal.valueOf(4.00), user.get("Uncategorized"));
+        assertBigDecimalEquals(BigDecimal.valueOf(6.00), user.get("Compra semanal"));
+    }
+
     private ReceiptItem itemWithCategories(String category, String userCategory, double totalPrice) {
         ReceiptItem item = new ReceiptItem();
         item.setName("Item");

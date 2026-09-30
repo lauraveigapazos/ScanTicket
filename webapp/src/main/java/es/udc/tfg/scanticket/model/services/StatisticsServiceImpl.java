@@ -2,6 +2,7 @@ package es.udc.tfg.scanticket.model.services;
 
 import es.udc.tfg.scanticket.model.entities.Receipt;
 import es.udc.tfg.scanticket.model.entities.ReceiptDao;
+import es.udc.tfg.scanticket.model.entities.ReceiptItem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +11,13 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.*;
+import java.util.function.Function;
 
 @Service
 @Transactional(readOnly = true)
 public class StatisticsServiceImpl implements StatisticsService{
 
-    //Spanish labels shown by the frontend (frontend/src/config/categories.js), keyed by classifier code.
-    //A user category typed as a label or code is grouped under that code.
+    //spanish translation of category tags used in frontend
     private static final Map<String, String> SPANISH_LABELS_BY_CODE = Map.ofEntries(
             Map.entry("FRUITS_VEGETABLES", "Frutas y verduras"),
             Map.entry("MEAT", "Carne"),
@@ -64,7 +65,7 @@ public class StatisticsServiceImpl implements StatisticsService{
         int receiptCount = getReceiptCount(userId, startDate, endDate);
         BigDecimal averageSpendingPerDay = getAverageSpendingPerDay(userId, startDate, endDate);
         Map<LocalDate, BigDecimal> dailySpending = getDailySpending(userId, startDate, endDate);
-        Map<String, BigDecimal> spendingByCategory = getSpendingByCategory(userId, startDate, endDate);
+        List<ReceiptItem> items = itemsOf(receiptDao.findByUserIdAndDateBetween(userId, startDate, endDate));
         YearMonth period = YearMonth.from(startDate);
 
         Map<String, Object> result = new HashMap<>();
@@ -72,7 +73,9 @@ public class StatisticsServiceImpl implements StatisticsService{
         result.put("receiptCount", receiptCount);
         result.put("averageSpendingPerDay", averageSpendingPerDay);
         result.put("dailySpending", dailySpending);
-        result.put("spendingByCategory", spendingByCategory);
+        result.put("spendingByCategory", spendingByCategory(items, StatisticsServiceImpl::preferredCategory));
+        result.put("spendingByAutomaticCategory", spendingByCategory(items, ReceiptItem::getCategory));
+        result.put("spendingByUserCategory", spendingByCategory(items, ReceiptItem::getUserCategory));
         result.put("period", period);
 
         return result;
@@ -141,29 +144,39 @@ public class StatisticsServiceImpl implements StatisticsService{
 
     @Override
     public Map<String, BigDecimal> getSpendingByCategory(Long userId, LocalDate startDate, LocalDate endDate) {
-
         List<Receipt> receipts = receiptDao.findByUserIdAndDateBetween(userId, startDate, endDate);
-        //case-insensitive keys merge "carne" and "Carne" into one slice
+        return spendingByCategory(itemsOf(receipts), StatisticsServiceImpl::preferredCategory);
+    }
+
+    private static List<ReceiptItem> itemsOf(List<Receipt> receipts) {
+        return receipts.stream().flatMap(receipt -> receipt.getItems().stream()).toList();
+    }
+
+    //priority: usercategory > category
+    private static String preferredCategory(ReceiptItem item) {
+        return (item.getUserCategory() != null && !item.getUserCategory().isBlank())
+                ? item.getUserCategory()
+                : item.getCategory();
+    }
+
+    private static Map<String, BigDecimal> spendingByCategory(List<ReceiptItem> items, Function<ReceiptItem, String> categoryOf) {
+
+        //case-insensitive keys
         Map<String, BigDecimal> categorySpending = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        receipts.forEach(receipt -> {
-            receipt.getItems().forEach(item -> {
-                //priority: usercategory > category
-                String categoryToUse = (item.getUserCategory() != null && !item.getUserCategory().isBlank())
-                        ? item.getUserCategory()
-                        : item.getCategory();
+        items.forEach(item -> {
+            String categoryToUse = categoryOf.apply(item);
 
-                //fallback
-                if (categoryToUse == null || categoryToUse.isBlank()) {
-                    categoryToUse = "Uncategorized";
-                }
+            //fallback
+            if (categoryToUse == null || categoryToUse.isBlank()) {
+                categoryToUse = "Uncategorized";
+            }
 
-                categoryToUse = categoryToUse.trim();
-                categoryToUse = CATEGORY_CODES.getOrDefault(categoryToUse, categoryToUse);
+            categoryToUse = categoryToUse.trim();
+            categoryToUse = CATEGORY_CODES.getOrDefault(categoryToUse, categoryToUse);
 
-                BigDecimal currentTotal = categorySpending.getOrDefault(categoryToUse, BigDecimal.ZERO);
-                categorySpending.put(categoryToUse, currentTotal.add(item.getTotalPrice()));
-            });
+            BigDecimal currentTotal = categorySpending.getOrDefault(categoryToUse, BigDecimal.ZERO);
+            categorySpending.put(categoryToUse, currentTotal.add(item.getTotalPrice()));
         });
 
         //sort by spending amount descending
