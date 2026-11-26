@@ -45,7 +45,6 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         { label: 'Historial', path: '/receipts', icon: 'history' },
         { label: 'Análisis', path: '/statistics', icon: 'analytics' },
         { label: 'Perfil', path: `/profile/${profile?.id}`, icon: 'profile', disabled: !profile?.id },
-        { label: 'Ajustes', path: '/settings', icon: 'settings' },
     ];
 
     return (
@@ -243,13 +242,6 @@ function renderIcon(iconName) {
                 <svg xmlns="http://www.w3.org/2000/svg" className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
-                </svg>
-            );
-        case 'settings':
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="3" />
-                    <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m0 5.08l-4.24 4.24M20 4.22l-4.24 4.24m0 5.08l4.24 4.24M1 12h6m6 0h6" />
                 </svg>
             );
         default:
