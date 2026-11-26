@@ -11,9 +11,7 @@ CREATE TABLE Users (
     lastName VARCHAR(60) NOT NULL, 
     email VARCHAR(60) NOT NULL,
     profile_picture MEDIUMBLOB,
-    role TINYINT NOT NULL,
-    passwordResetToken VARCHAR(255),
-    passwordResetTokenExpiration DATETIME
+    role TINYINT NOT NULL
 );
 
 CREATE TABLE Receipts (

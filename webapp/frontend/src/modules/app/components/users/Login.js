@@ -98,15 +98,6 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="text-center">
-                            <Link
-                                to="/users/forgotPassword"
-                                className="text-sm text-cambridge hover:text-myrtle transition-colors"
-                            >
-                                ¿Olvidaste tu contraseña?
-                            </Link>
-                        </div>
-
                         <button type="submit" className="btn-primary w-full" disabled={loading}>
                             {loading ? (
                                 <span className="inline-flex items-center justify-center gap-2">

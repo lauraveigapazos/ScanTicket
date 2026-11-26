@@ -10,7 +10,6 @@ Supermercados soportados: Mercadona, Alcampo y Froiz.
 - Backend: Spring Boot 3.3 (Java 17), Spring Security con JWT, JPA, H2 en memoria.
 - Frontend: React 18 (Create React App), React Router, Tailwind 4, Recharts.
 - OCR y categorización: Python con PaddleOCR y sentence-transformers.
-- Correo: Mailgun (SMTP).
 
 ## Estructura
 
@@ -41,9 +40,9 @@ Paddle/, Categorization/     prototipos Python independientes (la app no los usa
 
 ## Configuración
 
-Copia `webapp/.env.example` a `webapp/.env` y rellena las credenciales de Mailgun y la clave JWT.
+Copia `webapp/.env.example` a `webapp/.env` y rellena la clave JWT.
 `webapp/.env` está en `.gitignore`; no lo subas al repositorio.
-Todas las variables son obligatorias para arrancar el backend.
+La clave es obligatorias para arrancar el backend.
 
 `JWT_SIGN_KEY` firma los tokens con HS512, así que necesita al menos 64 bytes. Genera una con:
 `openssl rand -base64 64`

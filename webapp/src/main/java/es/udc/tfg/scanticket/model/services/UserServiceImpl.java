@@ -1,12 +1,9 @@
 package es.udc.tfg.scanticket.model.services;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectPasswordException;
-import es.udc.tfg.scanticket.model.services.exceptions.InvalidPasswordResetTokenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,9 +13,6 @@ import es.udc.tfg.scanticket.model.common.exceptions.DuplicateInstanceException;
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
 import es.udc.tfg.scanticket.model.entities.User;
 import es.udc.tfg.scanticket.model.entities.UserDao;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Class UserServiceImpl.
@@ -38,11 +32,6 @@ public class UserServiceImpl implements UserService {
 	/** The user dao. */
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private EmailService emailService;
-
-	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	/**
 	 * Sign up.
@@ -149,55 +138,6 @@ public class UserServiceImpl implements UserService {
 			user.setPassword(passwordEncoder.encode(newPassword));
 		}
 
-	}
-
-	@Override
-	public void requestPasswordReset(String email) throws InstanceNotFoundException {
-
-		logger.info("=== PASSWORD RESET REQUEST ===");
-		logger.info("Searching for email: '{}'", email);
-		Optional<User> user = userDao.findByEmail(email);
-		logger.info("User found: {}", user.isPresent());
-		if (user.isEmpty()) {
-			throw new InstanceNotFoundException("project.entities.user", email);
-		}
-		logger.info("User found: {}", user.get().getUserName());
-		String resetToken = generatePasswordResetToken();
-		User u = user.get();
-		u.setPasswordResetToken(resetToken);
-		u.setPasswordResetTokenExpiration(LocalDateTime.now().plusHours(1));
-
-		userDao.save(u);
-
-		String resetLink = "http://localhost:3000/#/reset-password?token=" + resetToken;
-		emailService.sendPasswordResetEmail(email, resetLink);
-	}
-
-	@Override
-	public void resetPassword(String token, String newPassword) throws InvalidPasswordResetTokenException {
-
-		Optional<User> user = userDao.findByPasswordResetToken(token);
-
-		if (user.isEmpty()) {
-			throw new InvalidPasswordResetTokenException(token);
-		}
-
-		User u = user.get();
-
-		if (u.getPasswordResetTokenExpiration() == null ||
-				LocalDateTime.now().isAfter(u.getPasswordResetTokenExpiration())) {
-			throw new InvalidPasswordResetTokenException(token);
-		}
-
-		u.setPassword(passwordEncoder.encode(newPassword));
-		u.setPasswordResetToken(null);
-		u.setPasswordResetTokenExpiration(null);
-
-		userDao.save(u);
-	}
-
-	private String generatePasswordResetToken() {
-		return UUID.randomUUID().toString();
 	}
 
 	@Override

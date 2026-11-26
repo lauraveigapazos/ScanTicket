@@ -3,7 +3,6 @@ package es.udc.tfg.scanticket.rest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.udc.tfg.scanticket.model.services.EmailService;
 import es.udc.tfg.scanticket.rest.dtos.AuthenticatedUserDto;
 import es.udc.tfg.scanticket.rest.dtos.LoginParamsDto;
 import org.junit.Test;
@@ -11,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -55,9 +53,6 @@ public class UserControllerTest {
 	/** The user controller. */
 	@Autowired
 	private UserController userController;
-
-	@MockBean
-	private EmailService emailService;
 
 	/**
 	 * Creates the authenticated user.

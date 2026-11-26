@@ -2,7 +2,6 @@ package es.udc.tfg.scanticket.model.entities;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 
 /**
  * The Class User.
@@ -41,12 +40,6 @@ public class User {
 
 	/** The role. */
 	private RoleType role;
-
-	/** The password reset token. */
-	private String passwordResetToken;
-
-	/** The password reset token expiration time. */
-	private LocalDateTime passwordResetTokenExpiration;
 
 	/**
 	 * Instantiates a new user.
@@ -212,19 +205,4 @@ public class User {
 		this.role = role;
 	}
 
-	public String getPasswordResetToken() {
-		return passwordResetToken;
-	}
-
-	public void setPasswordResetToken(String passwordResetToken) {
-		this.passwordResetToken = passwordResetToken;
-	}
-
-	public LocalDateTime getPasswordResetTokenExpiration() {
-		return passwordResetTokenExpiration;
-	}
-
-	public void setPasswordResetTokenExpiration(LocalDateTime passwordResetTokenExpiration) {
-		this.passwordResetTokenExpiration = passwordResetTokenExpiration;
-	}
 }

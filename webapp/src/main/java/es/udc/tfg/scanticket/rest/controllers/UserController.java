@@ -6,7 +6,6 @@ import java.util.Locale;
 import es.udc.tfg.scanticket.model.services.UserService;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectPasswordException;
-import es.udc.tfg.scanticket.model.services.exceptions.InvalidPasswordResetTokenException;
 import es.udc.tfg.scanticket.model.services.exceptions.PermissionException;
 import es.udc.tfg.scanticket.rest.common.ErrorsDto;
 import es.udc.tfg.scanticket.rest.common.JwtInfo;
@@ -98,13 +97,6 @@ public class UserController {
 
 		return new ErrorsDto(errorMessage);
 
-	}
-
-	@ExceptionHandler(InvalidPasswordResetTokenException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ErrorsDto handleInvalidPasswordResetTokenException(InvalidPasswordResetTokenException exception, Locale locale) {
-		return new ErrorsDto("El enlace de recuperación es inválido o ha expirado.");
 	}
 
 	/**
@@ -212,19 +204,6 @@ public class UserController {
 
 	}
 
-	@PostMapping("/forgotPassword")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void forgotPassword(@Validated @RequestBody ForgotPasswordParamsDto params)
-			throws InstanceNotFoundException {
-		userService.requestPasswordReset(params.getEmail());
-	}
-
-	@PostMapping("/resetPassword")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void resetPassword(@Validated @RequestBody ResetPasswordParamsDto params)
-			throws InvalidPasswordResetTokenException {
-		userService.resetPassword(params.getToken(), params.getNewPassword());
-	}
 	
 	/**
 	 * Generate service token.

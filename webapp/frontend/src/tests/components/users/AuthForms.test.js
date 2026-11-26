@@ -2,16 +2,12 @@ import React from "react";
 import { fireEvent, screen } from "@testing-library/react";
 import Login from "../../../modules/app/components/users/Login";
 import SignUp from "../../../modules/app/components/users/SignUp";
-import ForgotPassword from "../../../modules/app/components/users/ForgotPassword";
-import ResetPassword from "../../../modules/app/components/users/ResetPassword";
-import { forgotPassword, login, resetPassword, signUp } from "../../../backend/userService";
+import { login, signUp } from "../../../backend/userService";
 import { renderWithRouter } from "../../renderWithRouter";
 
 jest.mock("../../../backend/userService", () => ({
   login: jest.fn(),
   signUp: jest.fn(),
-  forgotPassword: jest.fn(),
-  resetPassword: jest.fn(),
 }));
 
 const type = (placeholder, value) =>
@@ -98,59 +94,3 @@ describe("SignUp", () => {
   });
 });
 
-describe("ForgotPassword", () => {
-  const submit = () => {
-    renderWithRouter(<ForgotPassword />);
-    type("tu@email.com", " laura@email.com ");
-    click("Enviar instrucciones");
-  };
-
-  it("sends the trimmed email and confirms", () => {
-    forgotPassword.mockImplementation((email, onSuccess) => onSuccess());
-
-    submit();
-
-    expect(forgotPassword.mock.calls[0][0]).toBe("laura@email.com");
-    expect(screen.getByText("Email enviado")).toBeInTheDocument();
-  });
-
-  it("shows an error for an unknown email", () => {
-    forgotPassword.mockImplementation((email, onSuccess, onErrors) => onErrors({}));
-
-    submit();
-
-    expect(screen.getByText("No encontramos una cuenta con ese email.")).toBeInTheDocument();
-  });
-});
-
-describe("ResetPassword", () => {
-  it("blocks the form when the link has no token", () => {
-    renderWithRouter(<ResetPassword />, { path: "/reset-password" });
-
-    expect(screen.getByText(/Token inválido/)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Cambiar contraseña" })).toBeDisabled();
-  });
-
-  it("resets the password with the token from the link", () => {
-    resetPassword.mockImplementation((token, newPassword, onSuccess) => onSuccess());
-    renderWithRouter(<ResetPassword />, { path: "/reset-password", route: "/reset-password?token=abc" });
-
-    type("Mínimo 6 caracteres", "secret1");
-    type("Repite la contraseña", "secret1");
-    click("Cambiar contraseña");
-
-    expect(resetPassword.mock.calls[0].slice(0, 2)).toEqual(["abc", "secret1"]);
-    expect(screen.getByText("Contraseña actualizada")).toBeInTheDocument();
-  });
-
-  it("rejects mismatched passwords", () => {
-    renderWithRouter(<ResetPassword />, { path: "/reset-password", route: "/reset-password?token=abc" });
-
-    type("Mínimo 6 caracteres", "secret1");
-    type("Repite la contraseña", "secret2");
-    click("Cambiar contraseña");
-
-    expect(screen.getByText("Las contraseñas no coinciden")).toBeInTheDocument();
-    expect(resetPassword).not.toHaveBeenCalled();
-  });
-});

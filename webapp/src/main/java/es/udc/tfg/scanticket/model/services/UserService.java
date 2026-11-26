@@ -5,7 +5,6 @@ import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
 import es.udc.tfg.scanticket.model.entities.User;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectLoginException;
 import es.udc.tfg.scanticket.model.services.exceptions.IncorrectPasswordException;
-import es.udc.tfg.scanticket.model.services.exceptions.InvalidPasswordResetTokenException;
 
 /**
  * The Interface UserService.
@@ -64,9 +63,6 @@ public interface UserService {
 		throws InstanceNotFoundException, IncorrectPasswordException;
 
 
-	void requestPasswordReset(String email) throws InstanceNotFoundException;
-
-	void resetPassword(String token, String newPassword) throws InvalidPasswordResetTokenException;
 
 	User findUserById(Long id) throws InstanceNotFoundException;
 }
