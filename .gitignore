@@ -36,3 +36,8 @@ webapp/frontend/coverage/
 .claude/
 CLAUDE.md
 AGENTS.md
+
+# Categorization evaluation (local)
+Categorization/evaluate_categorizer.py
+Categorization/evaluation_dataset.csv
+Categorization/resultados_evaluacion.txt
