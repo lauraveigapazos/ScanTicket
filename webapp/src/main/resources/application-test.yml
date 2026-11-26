@@ -24,3 +24,7 @@ app:
 ocr:
   worker:
     preload: false
+#test-only key, the real one comes from JWT_SIGN_KEY
+project:
+  jwt:
+    signKey: 1xiLN/X8SmK67e6CyTwzTIQZK7rKnQ5kZpyK73Zcl7u9Bqd3vttR+HYFPMmzBESzu9suAicHauIAiZA9uV3S1w==

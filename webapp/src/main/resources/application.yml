@@ -64,6 +64,6 @@ server:
     context-path: @project.contextPath@
 project:
   jwt:
-    signKey: WzROun12eUiDvko3UrJ74gNeJz2TWEWPMTh6DxyE8HWXIf4hETUrkM4IUGqqHq66PuVS
+    signKey: ${JWT_SIGN_KEY}
     expirationMinutes: 1440
 
