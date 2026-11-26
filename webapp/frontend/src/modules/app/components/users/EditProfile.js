@@ -55,11 +55,6 @@ export default function EditProfile() {
                     setError('Usuario no autenticado');
                     setInitialLoading(false);
                 }
-            },
-            () => {
-                setError('Sesión expirada. Por favor inicia sesión nuevamente.');
-                setInitialLoading(false);
-                setTimeout(() => navigate('/users/login'), 2000);
             }
         );
     }, [id, navigate]);

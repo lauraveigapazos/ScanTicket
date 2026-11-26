@@ -55,9 +55,6 @@ const SignUp = () => {
                 } else {
                     setError('El nombre de usuario ya existe.');
                 }
-            },
-            () => {
-                navigate('/users/login');
             }
         );
     };

@@ -71,7 +71,8 @@ public class ReceiptServiceImpl implements ReceiptService{
             throw e; //handled by controller
         }catch (Exception e){
             log.error("Error uploading receipt: {}", e.getMessage(), e);
-            throw new RuntimeException("Failed to upload receipt: " + e.getMessage(), e);
+            throw new ReceiptProcessingException(
+                    "No se ha podido procesar el ticket. Inténtalo de nuevo con otra imagen.", null);
         }
     }
 

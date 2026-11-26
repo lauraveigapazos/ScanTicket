@@ -21,6 +21,11 @@ spring:
     remove-abandoned-timeout: 60
     log-abandoned: true
     validation-query: SELECT 1
+  servlet:
+    multipart:
+      # same limit as the client; Spring's default is 1MB, which rejects most phone photos
+      max-file-size: 5MB
+      max-request-size: 6MB
   sql:
     init:
       # data.sql is UTF-8; without this Java 17 on Windows reads it as cp1252 (PlÃ¡tano)

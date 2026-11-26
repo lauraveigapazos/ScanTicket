@@ -4,6 +4,9 @@ import { config } from "../config/constants.js";
 let networkErrorCallback;
 let reauthenticationCallback;
 
+const UNEXPECTED_ERROR = "Se ha producido un error inesperado. Inténtalo de nuevo.";
+const CONNECTION_ERROR = "No se ha podido conectar con el servidor. Comprueba tu conexión e inténtalo de nuevo.";
+
 const isJson = (response) => {
   const contentType = response.headers.get("content-type");
 
@@ -33,41 +36,50 @@ const handleOkResponse = (response, onSuccess) => {
   return true;
 };
 
-const handle4xxResponse = (response, onErrors) => {
-  if (response.status < 400 || response.status >= 500) {
-    return false;
-  }
+const hasErrors = (payload) => payload && (payload.globalError || payload.fieldErrors);
 
-  if (response.status === 401 && reauthenticationCallback) {
-    reauthenticationCallback();
-    return true;
+const handleErrorResponse = (response, onErrors) => {
+  if (response.status === 401) {
+    //expired or invalid token: drop the session and let the app send the user to the login page
+    removeServiceToken();
+    if (reauthenticationCallback) {
+      reauthenticationCallback();
+    }
+    return undefined;
   }
 
   if (!isJson(response)) {
     throw new NetworkError();
   }
 
-  if (onErrors) {
-    response.json().then((payload) => {
-      if (payload.globalError || payload.fieldErrors) {
+  return response.json().then((payload) => {
+    if (hasErrors(payload)) {
+      if (onErrors) {
         onErrors(payload);
       }
-    });
-  }
+      return;
+    }
 
-  return true;
+    //no app-authored message to show (e.g. an unhandled server error)
+    throw new NetworkError();
+  });
 };
 
 const handleResponse = (response, onSuccess, onErrors) => {
   if (handleOkResponse(response, onSuccess)) {
-    return;
+    return undefined;
   }
 
-  if (handle4xxResponse(response, onErrors)) {
-    return;
-  }
+  return handleErrorResponse(response, onErrors);
+};
 
-  throw new NetworkError();
+//without a global handler, the component still gets a message so it can leave its loading state
+const handleFailure = (error, onErrors) => {
+  if (networkErrorCallback) {
+    networkErrorCallback(error);
+  } else if (onErrors) {
+    onErrors({ globalError: error instanceof NetworkError ? UNEXPECTED_ERROR : CONNECTION_ERROR });
+  }
 };
 
 export const init = (callback) => (networkErrorCallback = callback);
@@ -114,4 +126,4 @@ export const fetchConfig = (method, body) => {
 export const appFetch = (path, options, onSuccess, onErrors) =>
   fetch(`${config.BASE_PATH}${path}`, options)
     .then((response) => handleResponse(response, onSuccess, onErrors))
-    .catch(networkErrorCallback);
+    .catch((error) => handleFailure(error, onErrors));

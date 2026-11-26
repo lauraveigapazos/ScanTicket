@@ -4,12 +4,10 @@ import {
   setServiceToken,
   getServiceToken,
   removeServiceToken,
-  setReauthenticationCallback,
 } from "./appFetch";
 
-const processLoginSignUp = (authenticatedUser, onSuccess, reauthenticationCallback) => {
+const processLoginSignUp = (authenticatedUser, onSuccess) => {
   setServiceToken(authenticatedUser.serviceToken);
-  setReauthenticationCallback(reauthenticationCallback);
   onSuccess(authenticatedUser);
 }
 
@@ -17,30 +15,24 @@ export const login = (
   userName,
   password,
   onSuccess,
-  onErrors,
-  reauthenticationCallback
+  onErrors
 ) =>
   appFetch(
     "/users/login",
     fetchConfig("POST", { userName, password }),
     (authenticatedUser) => {
-      processLoginSignUp(authenticatedUser, onSuccess, reauthenticationCallback);
+      processLoginSignUp(authenticatedUser, onSuccess);
     },
     onErrors
   );
 
-export const tryLoginFromServiceToken = (
-  onSuccess,
-  reauthenticationCallback
-) => {
+export const tryLoginFromServiceToken = (onSuccess) => {
   const serviceToken = getServiceToken();
 
   if (!serviceToken) {
     onSuccess();
     return;
   }
-
-  setReauthenticationCallback(reauthenticationCallback);
 
   appFetch(
     "/users/loginFromServiceToken",
@@ -50,12 +42,12 @@ export const tryLoginFromServiceToken = (
   );
 };
 
-export const signUp = (user, onSuccess, onErrors, reauthenticationCallback) => {
+export const signUp = (user, onSuccess, onErrors) => {
   appFetch(
     "/users/signUp",
     fetchConfig("POST", user),
     (authenticatedUser) => {
-      processLoginSignUp(authenticatedUser, onSuccess, reauthenticationCallback);
+      processLoginSignUp(authenticatedUser, onSuccess);
     },
     onErrors
   );

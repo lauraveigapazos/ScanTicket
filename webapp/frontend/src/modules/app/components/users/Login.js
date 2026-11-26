@@ -26,9 +26,6 @@ const Login = () => {
             (error) => {
                 setLoading(false);
                 setError('Usuario o contraseña incorrectos.');
-            },
-            () => {
-                navigate('/users/login');
             }
         );
     };

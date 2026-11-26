@@ -1,6 +1,7 @@
 import {
   appFetch,
   fetchConfig,
+  getServiceToken,
   init,
   setReauthenticationCallback,
   setServiceToken,
@@ -93,5 +94,38 @@ describe("appFetch", () => {
     await call(response(500, {}));
 
     expect(onNetworkError).toHaveBeenCalled();
+  });
+
+  it("passes server errors with a message to onErrors", async () => {
+    await call(response(500, { globalError: "No se ha podido procesar el ticket." }));
+
+    expect(onErrors).toHaveBeenCalledWith({ globalError: "No se ha podido procesar el ticket." });
+    expect(onNetworkError).not.toHaveBeenCalled();
+  });
+
+  it("clears the stored token on 401", async () => {
+    setServiceToken("expired");
+
+    await call(response(401, {}));
+
+    expect(getServiceToken()).toBeNull();
+  });
+
+  describe("without a global network error handler", () => {
+    beforeEach(() => init(undefined));
+
+    it("gives the component a generic message for unexpected server errors", async () => {
+      await call(response(500, {}));
+
+      expect(onErrors).toHaveBeenCalledWith({ globalError: expect.stringContaining("error inesperado") });
+    });
+
+    it("gives the component a connection message when the request fails", async () => {
+      global.fetch = jest.fn(() => Promise.reject(new TypeError("Failed to fetch")));
+      await appFetch("/path", {}, onSuccess, onErrors);
+      await flush();
+
+      expect(onErrors).toHaveBeenCalledWith({ globalError: expect.stringContaining("conectar con el servidor") });
+    });
   });
 });

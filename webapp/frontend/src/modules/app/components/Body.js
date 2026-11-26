@@ -1,6 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
-import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import {Navigate, Outlet, Route, Routes, useNavigate} from "react-router-dom";
+
+import {setReauthenticationCallback} from "../../../backend/appFetch";
 
 import Home from "./Home";
 import Login from "./users/Login";
@@ -20,6 +22,12 @@ import Analysis from "./statistics/Analysis";
 
 const Body = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const navigate = useNavigate();
+
+    //any request rejected with 401 (expired or invalid token) sends the user back to the login page
+    useEffect(() => {
+        setReauthenticationCallback(() => navigate('/users/login', {replace: true}));
+    }, [navigate]);
 
   return (
     <Routes>

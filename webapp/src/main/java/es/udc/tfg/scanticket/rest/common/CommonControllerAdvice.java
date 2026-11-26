@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import es.udc.tfg.scanticket.model.common.exceptions.DuplicateInstanceException;
 import es.udc.tfg.scanticket.model.common.exceptions.InstanceNotFoundException;
@@ -111,6 +112,21 @@ public class CommonControllerAdvice {
 				locale);
 
 		return new ErrorsDto(errorMessage);
+
+	}
+
+	/**
+	 * Handle uploads larger than the configured multipart limit.
+	 *
+	 * @param exception the exception
+	 * @return the errors dto
+	 */
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	@ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+	@ResponseBody
+	public ErrorsDto handleMaxUploadSizeExceededException(MaxUploadSizeExceededException exception) {
+
+		return new ErrorsDto("La imagen no puede superar los 5 MB.");
 
 	}
 

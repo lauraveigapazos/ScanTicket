@@ -32,9 +32,6 @@ const Home = () => {
                 if (authenticatedUser?.user) {
                     setProfile(authenticatedUser.user);
                 }
-            },
-            (error) => {
-                console.error("Failed to authenticate:", error);
             }
         );
     }, []);
